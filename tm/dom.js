@@ -18,11 +18,19 @@ export function setMachineState(node, state, position) {
 }
 
 export function getTapeValue(node, position) {
-	return 0; // FIXME
+	let span = node.querySelector(`[data-position="${position}"]`);
+	return (span ? span.dataset.value : "0");
 }
 
 export function setTapeValue(node, position, value) {
-	// FIXME
+	let span = node.querySelector(`[data-position="${position}"]`);
+	if (!span) {
+		span = document.createElement("span");
+		span.dataset.position = position;
+		span.style.setProperty(POSITION, position);
+		node.appendChild(span);
+	}
+	span.dataset.value = value;
 }
 
 export function getRuleNode(node, state, tape) {

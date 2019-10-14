@@ -6,9 +6,10 @@
 		</style>
 	</head>
 
-	<body data-skin="circle">
+	<body>
 		<input type="range" min="0" max="5000" />
-		<section>
+
+		<section data-skin="plain">
 			<table class="rules">
 				<thead>
 					<tr><td></td><td data-tape="0"></td><td data-tape="1"></td></tr>
@@ -22,14 +23,13 @@
 					<tr data-state="B">
 						<td data-state="B"></td>
 						<td data-tape="0">1LA</td>
-						<td data-tape="1">1RA</td>
+						<td data-tape="1">1RH</td>
 					</tr>
 				</tbody>
 			</table>
 
 			<div class="machine" data-state="A"></div>
-			<div class="tape">
-			</div>
+			<div class="tape"></div>
 		</div>
 
 		<button>GO</button>
@@ -42,9 +42,10 @@
 
 	let machine = document.querySelector(".machine");
 	let rules = document.querySelector(".rules");
+	let tape = document.querySelector(".tape");
 
 	document.querySelector("button").addEventListener("click", e => {
-		runtime.loop(machine, "FIXME", rules);
+		runtime.loop(machine, tape, rules);
 	});
 
 	dom.bindInputAndProperty(

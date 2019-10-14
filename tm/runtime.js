@@ -7,12 +7,11 @@ export async function transitionToNextState(machineNode, tapeNode, rulesNode) {
 	let oldTape = dom.getTapeValue(tapeNode, oldPosition);
 
 	let {state, position, tape} = rules.advanceState(rulesNode, oldState, oldPosition, oldTape);
-
-	dom.setTapeValue(tapeNode, tape, oldPosition);
+	dom.setTapeValue(tapeNode, oldPosition, tape);
 	dom.setMachineState(machineNode, state, position);
 
 	let time = dom.getTransitionTime(machineNode);
-	if (time) { await util.sleep(time); }
+	await util.sleep(time);
 	
 	return (state != "H");
 }

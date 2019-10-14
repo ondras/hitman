@@ -12,6 +12,14 @@
 	margin-left: calc(var(--position) * var(--cell-width));
 }
 
+.tape {
+	position: relative;
+	[data-value] {
+		position: absolute;
+		left: calc(var(--position) * var(--cell-width));
+	}
+}
+
 .rules {
 	border-collapse: collapse;
 	text-align: center;
@@ -20,6 +28,32 @@
 	thead td:first-child {
 		border-left: none;
 		border-top: none;
+	}
+}
+
+[data-skin=plain] {
+	font-family: monospace;
+	--cell-width: 1ch;
+
+	.machine {
+		&::before { content: "?"; }
+		&[data-state=A] { color: red; }
+		&[data-state=B] { color: green; }
+	}
+
+	.rules {
+		thead td[data-tape]::before {
+			content: attr(data-tape);
+		}
+
+		td[data-state]::before {
+			content: attr(data-state);
+		}
+	}
+
+	.tape {
+		height: 1em;
+		[data-value]::before { content: attr(data-value); }
 	}
 }
 
@@ -33,15 +67,5 @@
 
 		&[data-state=A] { color: red; }
 		&[data-state=B] { color: green; }
-	}
-
-	.rules {
-		thead td[data-tape]::before {
-			content: attr(data-tape);
-		}
-
-		td[data-state]::before {
-			content: attr(data-state);
-		}
 	}
 }
