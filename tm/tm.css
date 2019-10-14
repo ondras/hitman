@@ -29,6 +29,9 @@
   border-left: none;
   border-top: none;
 }
+.rules .active {
+  font-weight: bold;
+}
 [data-skin=plain] {
   font-family: monospace;
   --cell-width: 1ch;
@@ -42,11 +45,11 @@
 [data-skin=plain] .machine[data-state=B] {
   color: green;
 }
-[data-skin=plain] .rules thead td[data-tape]::before {
-  content: attr(data-tape);
-}
-[data-skin=plain] .rules td[data-state]::before {
+[data-skin=plain] .rules thead td[data-state]::before {
   content: attr(data-state);
+}
+[data-skin=plain] .rules td[data-tape]::before {
+  content: attr(data-tape);
 }
 [data-skin=plain] .tape {
   height: 1em;

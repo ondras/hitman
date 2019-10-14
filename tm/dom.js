@@ -34,7 +34,11 @@ export function setTapeValue(node, position, value) {
 }
 
 export function getRuleNode(node, state, tape) {
-	return node.querySelector(`[data-state="${state}"] [data-tape="${tape}"]`);
+	return node.querySelector(`[data-tape="${tape}"] [data-state="${state}"]`);
+}
+
+export function setRuleNode(node, str) {
+	node.textContent = str;
 }
 
 export function getTransitionTime(machine) {
@@ -51,4 +55,53 @@ export function bindInputAndProperty(input, node, property) {
 
 	input.addEventListener("input", inputToProperty);
 	propertyToInput();
+}
+
+export function createMachine() {
+	let node = document.createElement("div");
+	node.className = "machine";
+	node.dataset.state = "A";
+	return node;
+}
+
+export function createTape() {
+	let node = document.createElement("div");
+	node.className = "tape";
+	return node;
+}
+
+function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
+
+export function createRules(numStates) {
+	let node = document.createElement("table");
+	node.className = "rules";
+
+	let thead = document.createElement("thead");
+	node.appendChild(thead);
+	let tr = thead.insertRow();
+
+	for (let state=-1;state<numStates;state++) {
+		let td = tr.insertCell();
+		if (state > -1) { td.dataset.state = indexToState(state); }
+	}
+
+	let tbody = document.createElement("tbody");
+	node.appendChild(tbody);
+
+	for (let tape=0;tape<=1;tape++) {
+		let tr = tbody.insertRow();
+		tr.dataset.tape = tape;
+
+		for (let state=-1;state<numStates;state++) {
+			let td = tr.insertCell();
+			if (state > -1) {
+				td.dataset.state = indexToState(state);
+				td.textContent = `1L${indexToState(state)}`;
+			} else {
+				td.dataset.tape = tape;
+			}
+		}
+	}
+
+	return node;
 }

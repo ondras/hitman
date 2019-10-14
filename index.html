@@ -2,55 +2,45 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="tm/tm.css" />
-		<style>
-		</style>
 	</head>
 
 	<body>
 		<input type="range" min="0" max="5000" />
 
 		<section data-skin="plain">
-			<table class="rules">
-				<thead>
-					<tr><td></td><td data-tape="0"></td><td data-tape="1"></td></tr>
-				</thead>
-				<tbody>
-					<tr data-state="A">
-						<td data-state="A"></td>
-						<td data-tape="0">1RB</td>
-						<td data-tape="1">1LB</td>
-					</tr>
-					<tr data-state="B">
-						<td data-state="B"></td>
-						<td data-tape="0">1LA</td>
-						<td data-tape="1">1RH</td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="machine" data-state="A"></div>
-			<div class="tape"></div>
 		</div>
 
 		<button>GO</button>
 
-		<script>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+		</style>
 
-	</script>
+
 	<script type="module">
-	import {runtime, dom} from "./tm/tm.js";
+	import {runtime, dom, rules} from "./tm/tm.js";
 
-	let machine = document.querySelector(".machine");
-	let rules = document.querySelector(".rules");
-	let tape = document.querySelector(".tape");
+	const parent = document.querySelector("section");
+
+	let rulesNode = dom.createRules(2);
+	rules.fillBusyBeaver(rulesNode);
+	let machineNode = dom.createMachine();
+	let tapeNode = dom.createTape();
+
+	let append = parent.appendChild.bind(parent);
+	[rulesNode, machineNode, tapeNode].forEach(append);
 
 	document.querySelector("button").addEventListener("click", e => {
-		runtime.loop(machine, tape, rules);
+		runtime.loop(machineNode, tapeNode, rulesNode);
 	});
 
 	dom.bindInputAndProperty(
 		document.querySelector("[type=range]"),
-		machine,
+		document.body,
 		dom.TRANSITION
 	);
 	</script>

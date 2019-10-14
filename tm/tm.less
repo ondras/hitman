@@ -29,6 +29,10 @@
 		border-left: none;
 		border-top: none;
 	}
+
+	.active {
+		font-weight: bold;
+	}
 }
 
 [data-skin=plain] {
@@ -42,12 +46,12 @@
 	}
 
 	.rules {
-		thead td[data-tape]::before {
-			content: attr(data-tape);
+		thead td[data-state]::before {
+			content: attr(data-state);
 		}
 
-		td[data-state]::before {
-			content: attr(data-state);
+		td[data-tape]::before {
+			content: attr(data-tape);
 		}
 	}
 
