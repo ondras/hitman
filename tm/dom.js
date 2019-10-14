@@ -1,14 +1,13 @@
+import * as util from "./util.js";
+
 export const POSITION = "--position";
 export const TRANSITION = "--transition";
 
-function getProperty(node, prop) {
-	return getComputedStyle(node).getPropertyValue(prop);
-}
 
 export function getMachineState(node) {
 	return {
 		state: node.dataset.state,
-		position: Number(getProperty(node, POSITION))
+		position: Number(util.getProperty(node, POSITION))
 	}
 }
 
@@ -42,19 +41,7 @@ export function setRuleNode(node, str) {
 }
 
 export function getTransitionTime(machine) {
-	return Number(getProperty(machine, TRANSITION));
-}
-
-export function bindInputAndProperty(input, node, property) {
-	function inputToProperty() {
-		node.style.setProperty(property, input.value);
-	}
-	function propertyToInput() {
-		input.value = Number(getProperty(node, property));
-	}
-
-	input.addEventListener("input", inputToProperty);
-	propertyToInput();
+	return Number(util.getProperty(machine, TRANSITION));
 }
 
 export function createMachine() {
@@ -70,8 +57,6 @@ export function createTape() {
 	return node;
 }
 
-function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
-
 export function createRules(numStates) {
 	let node = document.createElement("table");
 	node.className = "rules";
@@ -82,7 +67,7 @@ export function createRules(numStates) {
 
 	for (let state=-1;state<numStates;state++) {
 		let td = tr.insertCell();
-		if (state > -1) { td.dataset.state = indexToState(state); }
+		if (state > -1) { td.dataset.state = util.indexToState(state); }
 	}
 
 	let tbody = document.createElement("tbody");
@@ -95,8 +80,8 @@ export function createRules(numStates) {
 		for (let state=-1;state<numStates;state++) {
 			let td = tr.insertCell();
 			if (state > -1) {
-				td.dataset.state = indexToState(state);
-				td.textContent = `1L${indexToState(state)}`;
+				td.dataset.state = util.indexToState(state);
+				td.textContent = `1L${util.indexToState(state)}`;
 			} else {
 				td.dataset.tape = tape;
 			}
@@ -104,4 +89,12 @@ export function createRules(numStates) {
 	}
 
 	return node;
+}
+
+export function getAvailableStates(node) {
+	return Array.from(node.querySelectorAll("thead [data-state]")).map(node => node.dataset.state);
+}
+
+export function getAvailableTapes(node) {
+	return Array.from(node.querySelectorAll("tr [data-tape]")).map(node => node.dataset.tape);
 }

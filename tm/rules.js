@@ -15,8 +15,8 @@ export function advanceState(rulesNode, state, tape) {
 }
 
 export function fillBusyBeaver(rulesNode) {
-	let states = ["A", "B"]; // FIXME
-	let tapes = ["0", "1"];
+	let states = dom.getAvailableStates(rulesNode);
+	let tapes = dom.getAvailableTapes(rulesNode);
 
 	tapes.forEach(tape => {
 		states.forEach(state => {
@@ -33,5 +33,24 @@ const BUSY = {
 		"B-0": "1LA",
 		"A-1": "1LB",
 		"B-1": "1RH"
+	},
+
+	"3": {
+		"A-0": "1RB",
+		"B-0": "0RC",
+		"C-0": "1LC",
+		"A-1": "1RH",
+		"B-1": "1RB",
+		"C-1": "1LA"
+	},
+	"4": {
+		"A-0": "1RB",
+		"B-0": "1LA",
+		"C-0": "1RH",
+		"D-0": "1RD",
+		"A-1": "1LB",
+		"B-1": "0LC",
+		"C-1": "1LD",
+		"D-1": "0RA"
 	}
 }

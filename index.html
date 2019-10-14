@@ -22,11 +22,11 @@
 
 
 	<script type="module">
-	import {runtime, dom, rules} from "./tm/tm.js";
+	import {runtime, dom, rules, util} from "./tm/tm.js";
 
 	const parent = document.querySelector("section");
 
-	let rulesNode = dom.createRules(2);
+	let rulesNode = dom.createRules(4);
 	rules.fillBusyBeaver(rulesNode);
 	let machineNode = dom.createMachine();
 	let tapeNode = dom.createTape();
@@ -38,7 +38,7 @@
 		runtime.loop(machineNode, tapeNode, rulesNode);
 	});
 
-	dom.bindInputAndProperty(
+	util.bindInputAndProperty(
 		document.querySelector("[type=range]"),
 		document.body,
 		dom.TRANSITION
