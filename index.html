@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="stylesheet" href="tm/tm.css" />
+		<style>
+		</style>
+	</head>
+
+	<body data-skin="circle">
+		<input type="range" min="0" max="5000" />
+		<section>
+			<table class="rules">
+				<thead>
+					<tr><td></td><td data-tape="0"></td><td data-tape="1"></td></tr>
+				</thead>
+				<tbody>
+					<tr data-state="A">
+						<td data-state="A"></td>
+						<td data-tape="0">1RB</td>
+						<td data-tape="1">1LB</td>
+					</tr>
+					<tr data-state="B">
+						<td data-state="B"></td>
+						<td data-tape="0">1LA</td>
+						<td data-tape="1">1RA</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="machine" data-state="A"></div>
+			<div class="tape">
+			</div>
+		</div>
+
+		<button>GO</button>
+
+		<script>
+
+	</script>
+	<script type="module">
+	import {runtime, dom} from "./tm/tm.js";
+
+	let machine = document.querySelector(".machine");
+	let rules = document.querySelector(".rules");
+
+	document.querySelector("button").addEventListener("click", e => {
+		runtime.loop(machine, "FIXME", rules);
+	});
+
+	dom.bindInputAndProperty(
+		document.querySelector("[type=range]"),
+		machine,
+		dom.TRANSITION
+	);
+	</script>
+	</body>
+</html>
