@@ -8,8 +8,9 @@
 }
 .machine {
   --duration: calc(var(--transition) * 1ms / 3);
-  transition: margin-left var(--duration) 0ms, color var(--duration) var(--duration);
-  margin-left: calc(var(--position) * var(--cell-width));
+  transition: left var(--duration) 0ms, color var(--duration) var(--duration);
+  position: relative;
+  left: calc(var(--position) * var(--cell-width));
 }
 .tape {
   position: relative;
@@ -36,8 +37,14 @@
   font-family: monospace;
   --cell-width: 1ch;
 }
+[data-skin=plain] .machine {
+  white-space: pre;
+}
 [data-skin=plain] .machine::before {
-  content: "?";
+  content: attr(data-state) "\A";
+}
+[data-skin=plain] .machine::after {
+  content: "↓";
 }
 [data-skin=plain] .machine[data-state=A] {
   color: red;
@@ -52,6 +59,7 @@
   content: attr(data-tape);
 }
 [data-skin=plain] .tape {
+  width: var(--cell-width);
   height: 1em;
 }
 [data-skin=plain] .tape [data-value]::before {
