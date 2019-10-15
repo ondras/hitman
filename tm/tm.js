@@ -1,6 +1,28 @@
-import * as rules from "./rules.js";
-import * as util from "./util.js";
-import * as runtime from "./runtime.js";
-import * as dom from "./dom.js";
+import "./machine.js";
+import "./tape.js";
+import "./rules.js";
+import "./scene.js";
 
-export {runtime, rules, util, dom};
+import * as util from "./util.js";
+
+export async function transitionToNextState(machine, tapeNode, rules) {
+	let oldTape = tapeNode.getValue(machine.position);
+
+	let {state, position, tape} = rules.advanceState(machine.state, oldTape);
+
+	tapeNode.setValue(machine.position, tape);
+	machine.state = state;
+	machine.position += position;
+
+	let time = util.getTransitionTime(machine);
+	await util.sleep(time);
+	
+	return (state != "H");
+}
+
+export async function loop(machine, tape, rules) {
+	while (1) {
+		let running = await transitionToNextState(machine, tape, rules);
+		if (!running) { break; }
+	}
+}

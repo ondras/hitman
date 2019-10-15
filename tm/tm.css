@@ -1,80 +1,103 @@
-* {
-  box-sizing: border-box;
-}
-:root {
-  --cell-width: 30px;
-  --position: 0;
-  --transition: 1000;
-}
-.machine {
+tm-machine {
   --duration: calc(var(--transition) * 1ms / 3);
   transition: left var(--duration) 0ms, color var(--duration) var(--duration);
   position: relative;
   left: calc(var(--position) * var(--cell-width));
 }
-.tape {
-  position: relative;
-}
-.tape [data-value] {
-  position: absolute;
-  left: calc(var(--position) * var(--cell-width));
-}
-.rules {
+tm-rules {
   border-collapse: collapse;
   text-align: center;
 }
-.rules td {
+tm-rules td {
   border: 1px solid #000;
 }
-.rules thead td:first-child {
+tm-rules thead td:first-child {
   border-left: none;
   border-top: none;
 }
-.rules .active {
+tm-rules .active {
   font-weight: bold;
 }
-[data-skin=plain] {
+tm-machine {
+  --duration: calc(var(--transition) * 1ms / 3);
+  transition: left var(--duration) 0ms, color var(--duration) var(--duration);
+  position: relative;
+  left: calc(var(--position) * var(--cell-width));
+}
+tm-rules {
+  border-collapse: collapse;
+  text-align: center;
+}
+tm-rules td {
+  border: 1px solid #000;
+}
+tm-rules thead td:first-child {
+  border-left: none;
+  border-top: none;
+}
+tm-rules .active {
+  font-weight: bold;
+}
+tm-tape {
+  position: relative;
+}
+tm-tape [value] {
+  position: absolute;
+  left: calc(var(--position) * var(--cell-width));
+}
+tm-tape {
+  position: relative;
+}
+tm-tape [value] {
+  position: absolute;
+  left: calc(var(--position) * var(--cell-width));
+}
+tm-scene {
+  --cell-width: 30px;
+  --transition: 1000;
+}
+tm-scene[skin=plain] {
   font-family: monospace;
   --cell-width: 1ch;
 }
-[data-skin=plain] .machine {
+tm-scene[skin=plain] tm-machine {
   white-space: pre;
 }
-[data-skin=plain] .machine::before {
-  content: attr(data-state) "\A";
+tm-scene[skin=plain] tm-machine::before {
+  content: attr(state) "\A";
 }
-[data-skin=plain] .machine::after {
+tm-scene[skin=plain] tm-machine::after {
   content: "↓";
 }
-[data-skin=plain] .machine[data-state=A] {
+tm-scene[skin=plain] tm-machine[state=A] {
   color: red;
 }
-[data-skin=plain] .machine[data-state=B] {
+tm-scene[skin=plain] tm-machine[state=B] {
   color: green;
 }
-[data-skin=plain] .rules thead td[data-state]::before {
+tm-scene[skin=plain] tm-rules thead td[data-state]::before {
   content: attr(data-state);
 }
-[data-skin=plain] .rules td[data-tape]::before {
+tm-scene[skin=plain] tm-rules td[data-tape]::before {
   content: attr(data-tape);
 }
-[data-skin=plain] .tape {
+tm-scene[skin=plain] tm-tape {
   width: var(--cell-width);
   height: 1em;
 }
-[data-skin=plain] .tape [data-value]::before {
-  content: attr(data-value);
+tm-scene[skin=plain] tm-tape [value]::before {
+  content: attr(value);
 }
-[data-skin=circle] .machine {
+tm-scene[skin=circle] tm-machine {
   width: var(--cell-width);
   height: var(--cell-width);
   border-radius: 50%;
   border: 3px solid black;
   background-color: currentColor;
 }
-[data-skin=circle] .machine[data-state=A] {
+tm-scene[skin=circle] tm-machine[state=A] {
   color: red;
 }
-[data-skin=circle] .machine[data-state=B] {
+tm-scene[skin=circle] tm-machine[state=B] {
   color: green;
 }

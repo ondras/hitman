@@ -1,5 +1,8 @@
-BIN := $(shell npm bin)
+#BIN := $(shell npm bin)
+BIN := node_modules/less/bin
 LESSC := $(BIN)/lessc
 
-tm/tm.css: tm/tm.less
-	$(LESSC) $^ > $@
+all: tm/tm.css
+
+tm/tm.css: tm/*.less
+	$(LESSC) tm/tm.less > $@

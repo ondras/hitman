@@ -1,0 +1,46 @@
+tm-scene {
+	--cell-width: 30px;
+	--transition: 1000;
+
+	&[skin=plain] {
+		font-family: monospace;
+		--cell-width: 1ch;
+
+		tm-machine {
+			white-space: pre;
+			&::before { content: attr(state) "\A"; }
+			&::after { content: "↓"; }
+			&[state=A] { color: red; }
+			&[state=B] { color: green; }
+		}
+
+		tm-rules {
+			thead td[data-state]::before {
+				content: attr(data-state);
+			}
+
+			td[data-tape]::before {
+				content: attr(data-tape);
+			}
+		}
+
+		tm-tape {
+			width: var(--cell-width);
+			height: 1em;
+			[value]::before { content: attr(value); }
+		}
+	}
+
+	&[skin=circle] {
+		tm-machine {
+			width: var(--cell-width);
+			height: var(--cell-width);
+			border-radius: 50%;
+			border: 3px solid black;
+			background-color: currentColor;
+
+			&[state=A] { color: red; }
+			&[state=B] { color: green; }
+		}
+	}
+}

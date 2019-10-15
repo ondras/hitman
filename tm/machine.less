@@ -1,0 +1,6 @@
+tm-machine {
+	--duration: calc(var(--transition) * 1ms / 3);
+	transition: left var(--duration) 0ms, color var(--duration) var(--duration);
+	position: relative;
+	left: calc(var(--position) * var(--cell-width));
+}

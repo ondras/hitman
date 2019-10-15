@@ -8,11 +8,16 @@
 	<body>
 		<input type="range" min="0" max="5000" />
 
-		<section data-skin="plain"></section>
+		<tm-scene skin="plain">
+			<tm-rules states="4"></tm-rules>
+			<tm-machine state="A" position="0"></tm-machine>
+			<tm-tape></tm-tape>
+		</tm-scene>
+
 		<button>GO</button>
 
 		<style>
-			section {
+			tm-scene {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
@@ -21,26 +26,23 @@
 
 
 	<script type="module">
-	import {runtime, dom, rules, util} from "./tm/tm.js";
+	import * as tm from "./tm/tm.js";
+	import * as util from "./tm/util.js";
 
 	const parent = document.querySelector("section");
 
-	let rulesNode = dom.createRules(4);
-	rules.fillBusyBeaver(rulesNode);
-	let machineNode = dom.createMachine();
-	let tapeNode = dom.createTape();
-
-	let append = parent.appendChild.bind(parent);
-	[rulesNode, machineNode, tapeNode].forEach(append);
+	let rulesNode = document.querySelector("tm-rules").fillBusyBeaver();
+	let machineNode = document.querySelector("tm-machine");
+	let tapeNode = document.querySelector("tm-tape");
 
 	document.querySelector("button").addEventListener("click", e => {
-		runtime.loop(machineNode, tapeNode, rulesNode);
+		tm.loop(machineNode, tapeNode, rulesNode);
 	});
 
 	util.bindInputAndProperty(
 		document.querySelector("[type=range]"),
-		document.body,
-		dom.TRANSITION
+		machineNode,
+		"--transition"
 	);
 	</script>
 	</body>

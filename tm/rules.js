@@ -1,31 +1,79 @@
-import * as dom from "./dom.js";
+import * as util from "./util.js";
 
-export function advanceState(rulesNode, state, tape) {
-	let cell = dom.getRuleNode(rulesNode, state, tape);
-	if (!cell) { return null; }
+class Rules extends HTMLTableElement {
+	constructor() {
+		super();
 
-	let previous = Array.from(rulesNode.querySelectorAll(".active"));
-	previous.forEach(n => n.classList.remove("active"));
-	cell.classList.add("active");
+		let thead = document.createElement("thead");
+		thead.insertRow();
+		this.appendChild(thead);
 
-	let parts = cell.textContent.trim().split("");
-	let position = parts[1] == "L" ? -1 : 1;
+		let tbody = document.createElement("tbody");
+		tbody.insertRow().dataset.tape = "0";
+		tbody.insertRow().dataset.tape = "1";
+		this.appendChild(tbody);
+	}
 
-	return {state:parts[2], position, tape:parts[0]};
-}
+	static get observedAttributes() { return ["states"]; }
 
-export function fillBusyBeaver(rulesNode) {
-	let states = dom.getAvailableStates(rulesNode);
-	let tapes = dom.getAvailableTapes(rulesNode);
+	attributeChangedCallback(name, oldValue, newValue) {
+		let count = Number(newValue);
 
-	tapes.forEach(tape => {
-		states.forEach(state => {
-			let cell = dom.getRuleNode(rulesNode, state, tape);
-			let result = BUSY[states.length][`${state}-${tape}`];
-			dom.setRuleNode(cell, result);
+		let row = this.querySelector("thead tr");
+		row.innerHTML = "";
+		for (let i=-1;i<count;i++) {
+			let cell = row.insertCell();
+			if (i > -1) { cell.dataset.state = util.indexToState(i); }
+		}
+
+		[...this.querySelectorAll("tbody tr")].forEach((row, i) => {
+			row.innerHTML = "";
+			for (let j=-1;j<count;j++) {
+				let cell = row.insertCell();
+				if (j > -1) {
+					cell.dataset.state = util.indexToState(j);
+					cell.textContent = `1L${util.indexToState(j)}`;
+				} else {
+					cell.dataset.tape = i;
+				}
+			}
 		});
-	});
+	}
+
+	advanceState(state, tape) {
+		let cell = this._getCell(state, tape);
+		if (!cell) { return null; }
+
+		let previous = Array.from(this.querySelectorAll(".active"));
+		previous.forEach(n => n.classList.remove("active"));
+		cell.classList.add("active");
+
+		let parts = cell.textContent.trim().split("");
+		let position = (parts[1] == "L" ? -1 : 1);
+
+		return {state:parts[2], position, tape:parts[0]};
+	}
+
+	fillBusyBeaver() {
+		let states = [...this.querySelectorAll("thead [data-state]")].map(node => node.dataset.state);
+		let tapes = [...this.querySelectorAll("tbody tr")].map(node => node.dataset.tape);
+
+		tapes.forEach(tape => {
+			states.forEach(state => {
+				let cell = this._getCell(state, tape);
+				cell.textContent = BUSY[states.length][`${state}-${tape}`];
+			});
+		});
+
+		return this;
+	}
+
+	_getCell(state, tape) {
+		return this.querySelector(`[data-tape="${tape}"] [data-state="${state}"]`);
+	}
 }
+
+customElements.define("tm-rules", Rules, {extends:"table"});
 
 const BUSY = {
 	"2": {
