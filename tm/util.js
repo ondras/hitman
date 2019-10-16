@@ -18,20 +18,22 @@ export function bindInputAndProperty(input, node, property) {
 	propertyToInput();
 }
 
-export function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
-
 export function reflectAttribute(Ctor, name, def=null) {
 	Object.defineProperty(Ctor.prototype, name, {
 		get() {
 			if (this.hasAttribute(name)) {
-				let value = this.getAttribute(name);
-				if (typeof(def) == "number") { value = Number(value); }
-				return value;
+				return def.constructor(this.getAttribute(name));
 			} else {
 				return def;
 			}
 		},
-		set(value) { return this.setAttribute(name, value); }
+		set(value) {
+			if (value === null) {
+				return this.removeAttribute(name);
+			} else {
+				return this.setAttribute(name, value);
+			}
+		}
 	});
 }
 

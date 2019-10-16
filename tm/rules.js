@@ -1,47 +1,73 @@
 import * as util from "./util.js";
 
-class Rules extends HTMLTableElement {
+function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
+function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
+function indexToSymbol(i) { return String(i); }
+function symbolToIndex(symbol) { return Number(symbol); }
+
+class Rules extends HTMLElement {
 	constructor() {
 		super();
-
-		let thead = document.createElement("thead");
-		thead.insertRow();
-		this.appendChild(thead);
-
-		let tbody = document.createElement("tbody");
-		tbody.insertRow().dataset.tape = "0";
-		tbody.insertRow().dataset.tape = "1";
-		this.appendChild(tbody);
+		this._built = false;
 	}
 
-	static get observedAttributes() { return ["states"]; }
+	static get observedAttributes() { return ["states", "symbols"]; }
+
+	connectedCallback() {
+		if (this._built) { return; }
+
+		this.innerHTML = "";
+
+		let table = document.createElement("table");
+		table.createTHead();
+		table.createTBody();
+		this.append(table);
+
+		this._fill();
+	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		let count = Number(newValue);
-
-		let row = this.querySelector("thead tr");
-		row.innerHTML = "";
-		for (let i=-1;i<count;i++) {
-			let cell = row.insertCell();
-			if (i > -1) { cell.dataset.state = util.indexToState(i); }
+		switch (name) {
+			case "states":
+			case "symbols":
+				if (!this._built) { return; }
+				this._fill();
+			break;
 		}
-
-		[...this.querySelectorAll("tbody tr")].forEach((row, i) => {
-			row.innerHTML = "";
-			for (let j=-1;j<count;j++) {
-				let cell = row.insertCell();
-				if (j > -1) {
-					cell.dataset.state = util.indexToState(j);
-					cell.textContent = `1L${util.indexToState(j)}`;
-				} else {
-					cell.dataset.tape = i;
-				}
-			}
-		});
 	}
 
-	advanceState(state, tape) {
-		let cell = this._getCell(state, tape);
+	_fill() {
+		const table = this.querySelector("table");
+		const tHead = table.tHead;
+		const tBody = table.tBodies[0];
+
+		tHead.innerHTML = "";
+		tBody.innerHTML = "";
+
+		let row = tHead.insertRow();
+		for (let i=-1;i<this.states;i++) {
+			let cell = row.insertCell();
+			if (i > -1) {
+
+			}
+		}
+
+		for (let j=0;j<this.symbols;j++) {
+			let row = tBody.insertRow();
+			for (let i=-1;i<this.states;i++) {
+				let cell = row.insertCell();
+				if (i > -1) {
+					cell.dataset.state = indexToState(i);
+					cell.dataset.symbol = indexToSymbol(j);
+					cell.textContent = `1L${indexToState(i)}`;
+				} else {
+				}
+			}
+		}
+	}
+
+	advanceState(state, symbol) {
+		let cell = this._getCell(state, symbol);
 		if (!cell) { return null; }
 
 		let previous = Array.from(this.querySelectorAll(".active"));
@@ -55,25 +81,27 @@ class Rules extends HTMLTableElement {
 	}
 
 	fillBusyBeaver() {
-		let states = [...this.querySelectorAll("thead [data-state]")].map(node => node.dataset.state);
-		let tapes = [...this.querySelectorAll("tbody tr")].map(node => node.dataset.tape);
-
-		tapes.forEach(tape => {
-			states.forEach(state => {
-				let cell = this._getCell(state, tape);
-				cell.textContent = BUSY[states.length][`${state}-${tape}`];
-			});
-		});
+		for (let j=0;j<this.symbols;j++) {
+			for (let i=0;i<this.states;i++) {
+				let state = indexToState(i);
+				let symbol = indexToSymbol(j);
+				let cell = this._getCell(state, symbol);
+				cell.textContent = BUSY[this.states][`${state}-${symbol}`];
+			}
+		}
 
 		return this;
 	}
 
-	_getCell(state, tape) {
-		return this.querySelector(`[data-tape="${tape}"] [data-state="${state}"]`);
+	_getCell(state, symbol) {
+		const table = this.querySelector("table");
+		return table.querySelector(`[data-state="${state}"][data-symbol="${symbol}"]`);
 	}
 }
 
-customElements.define("tm-rules", Rules, {extends:"table"});
+util.reflectAttribute(Rules, "states", 1);
+util.reflectAttribute(Rules, "symbols", 2);
+customElements.define("tm-rules", Rules);
 
 const BUSY = {
 	"2": {

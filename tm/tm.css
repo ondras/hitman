@@ -5,28 +5,10 @@ tm-machine {
   left: calc(var(--position) * var(--cell-width));
 }
 tm-rules {
-  border-collapse: collapse;
   text-align: center;
 }
-tm-rules td {
-  border: 1px solid #000;
-}
-tm-rules thead td:first-child {
-  border-left: none;
-  border-top: none;
-}
-tm-rules .active {
-  font-weight: bold;
-}
-tm-machine {
-  --duration: calc(var(--transition) * 1ms / 3);
-  transition: left var(--duration) 0ms, color var(--duration) var(--duration);
-  position: relative;
-  left: calc(var(--position) * var(--cell-width));
-}
-tm-rules {
+tm-rules table {
   border-collapse: collapse;
-  text-align: center;
 }
 tm-rules td {
   border: 1px solid #000;
@@ -41,14 +23,7 @@ tm-rules .active {
 tm-tape {
   position: relative;
 }
-tm-tape [value] {
-  position: absolute;
-  left: calc(var(--position) * var(--cell-width));
-}
-tm-tape {
-  position: relative;
-}
-tm-tape [value] {
+tm-tape tm-symbol {
   position: absolute;
   left: calc(var(--position) * var(--cell-width));
 }

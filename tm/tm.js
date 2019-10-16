@@ -1,4 +1,5 @@
 import "./machine.js";
+import "./symbol.js";
 import "./tape.js";
 import "./rules.js";
 import "./scene.js";
@@ -16,7 +17,7 @@ export async function transitionToNextState(machine, tapeNode, rules) {
 
 	let time = util.getTransitionTime(machine);
 	await util.sleep(time);
-	
+
 	return (state != "H");
 }
 
