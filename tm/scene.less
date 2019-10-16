@@ -14,15 +14,7 @@ tm-scene {
 			&[state=B] { color: green; }
 		}
 
-		tm-rules {
-			thead td[data-state]::before {
-				content: attr(data-state);
-			}
-
-			td[data-tape]::before {
-				content: attr(data-tape);
-			}
-		}
+		// FIXME rules
 
 		tm-tape {
 			width: var(--cell-width);

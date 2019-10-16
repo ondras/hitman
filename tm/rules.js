@@ -1,9 +1,7 @@
 import * as util from "./util.js";
 
 function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
-function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
 function indexToSymbol(i) { return String(i); }
-function symbolToIndex(symbol) { return Number(symbol); }
 
 class Rules extends HTMLElement {
 	constructor() {
@@ -77,7 +75,7 @@ class Rules extends HTMLElement {
 		let parts = cell.textContent.trim().split("");
 		let position = (parts[1] == "L" ? -1 : 1);
 
-		return {state:parts[2], position, tape:parts[0]};
+		return {state:parts[2], position, symbol:parts[0]};
 	}
 
 	fillBusyBeaver() {

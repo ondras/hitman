@@ -6,12 +6,12 @@ import "./scene.js";
 
 import * as util from "./util.js";
 
-export async function transitionToNextState(machine, tapeNode, rules) {
-	let oldTape = tapeNode.getValue(machine.position);
+export async function transitionToNextState(machine, tape, rules) {
+	let oldSymbol = tape.getValue(machine.position);
 
-	let {state, position, tape} = rules.advanceState(machine.state, oldTape);
+	let {state, position, symbol} = rules.advanceState(machine.state, oldSymbol);
 
-	tapeNode.setValue(machine.position, tape);
+	tape.setValue(machine.position, symbol);
 	machine.state = state;
 	machine.position += position;
 

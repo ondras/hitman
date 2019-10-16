@@ -2,7 +2,7 @@ export function sleep(ms) {
 	return new Promise(r => setTimeout(r, ms));
 }
 
-export function getProperty(node, prop) {
+function getProperty(node, prop) {
 	return getComputedStyle(node).getPropertyValue(prop);
 }
 
@@ -37,9 +37,6 @@ export function reflectAttribute(Ctor, name, def=null) {
 	});
 }
 
-export const TRANSITION = "--transition";
-
 export function getTransitionTime(machine) {
-	return Number(getProperty(machine, TRANSITION));
+	return Number(getProperty(machine, "--transition"));
 }
-

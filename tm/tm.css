@@ -50,12 +50,6 @@ tm-scene[skin=plain] tm-machine[state=A] {
 tm-scene[skin=plain] tm-machine[state=B] {
   color: green;
 }
-tm-scene[skin=plain] tm-rules thead td[data-state]::before {
-  content: attr(data-state);
-}
-tm-scene[skin=plain] tm-rules td[data-tape]::before {
-  content: attr(data-tape);
-}
 tm-scene[skin=plain] tm-tape {
   width: var(--cell-width);
   height: 1em;
