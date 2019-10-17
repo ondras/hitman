@@ -1,8 +1,9 @@
 tm-tape {
 	position: relative;
+	width: var(--symbol-width);
 
 	tm-symbol {
 		position: absolute;
-		left: calc(var(--position) * var(--cell-width));
+		left: calc(var(--position) * var(--symbol-width));
 	}
 }

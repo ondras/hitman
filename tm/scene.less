@@ -1,10 +1,10 @@
 tm-scene {
-	--cell-width: 30px;
+	--symbol-width: 30px;
 	--transition: 1000;
 
 	&[skin=plain] {
 		font-family: monospace;
-		--cell-width: 1ch;
+		--symbol-width: 1ch;
 
 		tm-machine {
 			white-space: pre;
@@ -17,16 +17,33 @@ tm-scene {
 		// FIXME rules
 
 		tm-tape {
-			width: var(--cell-width);
-			height: 1em;
-			[value]::before { content: attr(value); }
+			height: 1.2em;
+		}
+
+		tm-symbol {
+			&::before { content: attr(value); }
+		}
+	}
+
+	&[skin=robot] {
+		--symbol-width: 1em;
+		font-size: 30px;
+
+		tm-machine::before {
+			content: "🤖";
+		}
+
+		tm-symbol {
+			transition: filter 500ms;
+			&::before { content: "💡"; }
+			&[value="0"] { filter: grayscale(1); }
 		}
 	}
 
 	&[skin=circle] {
 		tm-machine {
-			width: var(--cell-width);
-			height: var(--cell-width);
+			width: var(--symbol-width);
+			height: var(--symbol-width);
 			border-radius: 50%;
 			border: 3px solid black;
 			background-color: currentColor;
