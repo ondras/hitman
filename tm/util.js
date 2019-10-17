@@ -1,11 +1,3 @@
-export function sleep(ms) {
-	return new Promise(r => setTimeout(r, ms));
-}
-
-function getProperty(node, prop) {
-	return getComputedStyle(node).getPropertyValue(prop);
-}
-
 export function bindInputAndProperty(input, node, property) {
 	function inputToProperty() {
 		node.style.setProperty(property, input.value);
@@ -22,7 +14,8 @@ export function reflectAttribute(Ctor, name, def=null) {
 	Object.defineProperty(Ctor.prototype, name, {
 		get() {
 			if (this.hasAttribute(name)) {
-				return def.constructor(this.getAttribute(name));
+				let value = this.getAttribute(name);
+				return (def === null ? value : def.constructor(value));
 			} else {
 				return def;
 			}
@@ -37,6 +30,6 @@ export function reflectAttribute(Ctor, name, def=null) {
 	});
 }
 
-export function getTransitionTime(machine) {
-	return Number(getProperty(machine, "--transition"));
+function getProperty(node, prop) {
+	return getComputedStyle(node).getPropertyValue(prop);
 }

@@ -1,42 +1,71 @@
 tm-scene {
 	--symbol-width: 30px;
 	--transition: 1000;
+	--duration: calc(var(--transition) * 1ms / 3);
+
+	*, *::before, *::after { box-sizing: border-box; }
 
 	&[skin=plain] {
+		--symbol-width: calc(1ch + 2px);
+		@line-height: calc(20/16);
+
 		font-family: monospace;
-		--symbol-width: 1ch;
+		font-size: 16px;
+		line-height: @line-height;
+
+		tm-rules {
+			th[data-state]::before { content: attr(data-state); }
+			th[data-symbol]::before { content: attr(data-symbol); }
+		}
+
+		tm-instruction {
+			&::before { content: attr(symbol); }
+			&::after { content: attr(state); }
+		}
 
 		tm-machine {
 			white-space: pre;
 			&::before { content: attr(state) "\A"; }
 			&::after { content: "↓"; }
-			&[state=A] { color: red; }
-			&[state=B] { color: green; }
 		}
-
-		// FIXME rules
 
 		tm-tape {
-			height: 1.2em;
-		}
-
-		tm-symbol {
-			&::before { content: attr(value); }
+			height: calc(@line-height * 1em);
+			tm-symbol {
+				&::before { content: attr(value); }
+			}
 		}
 	}
 
 	&[skin=robot] {
-		--symbol-width: 1em;
-		font-size: 30px;
+		--symbol-width: 1.3em;
+		font-size: 32px;
 
-		tm-machine::before {
+		tm-rules td {
+			font-size: 80%;
+		}
+
+		tm-instruction::before, tm-instruction::after { margin: 0 4px; }
+
+		tm-machine::before, tm-rules th[data-state]::before, tm-instruction::after {
 			content: "🤖";
+			filter: drop-shadow(0 0 4px var(--color));
+		}
+
+		tm-symbol::before, tm-rules th[data-symbol]::before, tm-instruction::before {
+			content: "💡";
+		}
+
+		tm-symbol[value="0"], tm-rules th[data-symbol="0"], tm-instruction[symbol="0"]::before {
+			filter: grayscale(1);
+		}
+
+		tm-machine[state="H"], tm-instruction[state="H"]::after {
+			transform: rotate(90deg);
 		}
 
 		tm-symbol {
-			transition: filter 500ms;
-			&::before { content: "💡"; }
-			&[value="0"] { filter: grayscale(1); }
+			transition: filter var(--duration);
 		}
 	}
 

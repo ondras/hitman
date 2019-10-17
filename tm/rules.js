@@ -44,38 +44,34 @@ class Rules extends HTMLElement {
 
 		let row = tHead.insertRow();
 		for (let i=-1;i<this.states;i++) {
-			let cell = row.insertCell();
-			if (i > -1) {
-
-			}
+			let cell = row.appendChild(document.createElement("th"));
+			if (i > -1) { cell.dataset.state = indexToState(i); }
 		}
 
 		for (let j=0;j<this.symbols;j++) {
 			let row = tBody.insertRow();
+			let cell;
 			for (let i=-1;i<this.states;i++) {
-				let cell = row.insertCell();
 				if (i > -1) {
+					cell = row.insertCell();
 					cell.dataset.state = indexToState(i);
-					cell.dataset.symbol = indexToSymbol(j);
-					cell.textContent = `1L${indexToState(i)}`;
+					let instruction = document.createElement("tm-instruction");
+					cell.append(instruction);
 				} else {
+					cell = row.appendChild(document.createElement("th"));
 				}
+
+				cell.dataset.symbol = indexToSymbol(j);
 			}
 		}
 	}
 
-	advanceState(state, symbol) {
+	getInstruction(state, symbol) {
 		let cell = this._getCell(state, symbol);
 		if (!cell) { return null; }
 
-		let previous = Array.from(this.querySelectorAll(".active"));
-		previous.forEach(n => n.classList.remove("active"));
-		cell.classList.add("active");
-
-		let parts = cell.textContent.trim().split("");
-		let position = (parts[1] == "L" ? -1 : 1);
-
-		return {state:parts[2], position, symbol:parts[0]};
+		[...this.querySelectorAll("td")].forEach(c => c.classList.toggle("current", c == cell));
+		return cell.querySelector("tm-instruction");
 	}
 
 	fillBusyBeaver() {
@@ -83,8 +79,13 @@ class Rules extends HTMLElement {
 			for (let i=0;i<this.states;i++) {
 				let state = indexToState(i);
 				let symbol = indexToSymbol(j);
+				let value = BUSY[this.states][`${state}-${symbol}`];
+
 				let cell = this._getCell(state, symbol);
-				cell.textContent = BUSY[this.states][`${state}-${symbol}`];
+				let instruction = cell.querySelector("tm-instruction")
+				instruction.symbol = value.charAt(0);
+				instruction.direction = value.charAt(1);
+				instruction.state = value.charAt(2);
 			}
 		}
 
