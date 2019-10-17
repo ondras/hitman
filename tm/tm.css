@@ -60,8 +60,7 @@ tm-scene *::after {
 tm-scene[skin=plain] {
   --symbol-width: calc(1ch + 2px);
   font-family: monospace;
-  font-size: 16px;
-  line-height: calc(20/16);
+  line-height: 1.25;
 }
 tm-scene[skin=plain] tm-rules th[data-state]::before {
   content: attr(data-state);
@@ -85,17 +84,13 @@ tm-scene[skin=plain] tm-machine::after {
   content: "↓";
 }
 tm-scene[skin=plain] tm-tape {
-  height: calc(calc(20/16) * 1em);
+  height: calc(1.25 * 1em);
 }
 tm-scene[skin=plain] tm-tape tm-symbol::before {
   content: attr(value);
 }
 tm-scene[skin=robot] {
   --symbol-width: 1.3em;
-  font-size: 32px;
-}
-tm-scene[skin=robot] tm-rules td {
-  font-size: 80%;
 }
 tm-scene[skin=robot] tm-instruction::before,
 tm-scene[skin=robot] tm-instruction::after {
@@ -105,7 +100,7 @@ tm-scene[skin=robot] tm-machine::before,
 tm-scene[skin=robot] tm-rules th[data-state]::before,
 tm-scene[skin=robot] tm-instruction::after {
   content: "🤖";
-  filter: drop-shadow(0 0 4px var(--color));
+  filter: drop-shadow(0 0 3px var(--color));
 }
 tm-scene[skin=robot] tm-symbol::before,
 tm-scene[skin=robot] tm-rules th[data-symbol]::before,
