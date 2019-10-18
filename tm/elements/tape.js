@@ -1,4 +1,8 @@
 class Tape extends HTMLElement {
+	reset() {
+		this.innerHTML = "";
+	}
+
 	getValue(position) {
 		let symbol = this.querySelector(`[position="${position}"]`);
 		return (symbol ? symbol.value : "0");

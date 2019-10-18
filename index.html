@@ -12,9 +12,8 @@
 			<tm-rules states="2"></tm-rules>
 			<tm-machine state="A" position="0"></tm-machine>
 			<tm-tape></tm-tape>
+			<tm-controls></tm-controls>
 		</tm-scene>
-
-		<button>GO</button>
 
 		<style>
 			tm-scene {
@@ -23,10 +22,13 @@
 				align-items: center;
 				font-size: 50px;
 			}
+			tm-rules th, tm-rules td {
+				padding: 0.1em 0.3em;
+
+			}
 			tm-rules td {
 				font-size: 60%;
 			}
-
 			tm-machine {
 				margin-top: 1em;
 			}
@@ -34,24 +36,8 @@
 
 
 	<script type="module">
-	import * as tm from "./tm/tm.js";
-	import * as util from "./tm/util.js";
-
-	const parent = document.querySelector("section");
-
-	let rulesNode = document.querySelector("tm-rules").fillBusyBeaver();
-	let machineNode = document.querySelector("tm-machine");
-	let tapeNode = document.querySelector("tm-tape");
-
-	document.querySelector("button").addEventListener("click", e => {
-		tm.loop(machineNode, tapeNode, rulesNode);
-	});
-
-	util.bindInputAndProperty(
-		document.querySelector("[type=range]"),
-		machineNode,
-		"--transition"
-	);
+		import * as tm from "./tm/tm.js";
+		document.querySelector("tm-rules").fillBusyBeaver();
 	</script>
 	</body>
 </html>

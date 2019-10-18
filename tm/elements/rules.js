@@ -1,7 +1,10 @@
-import * as util from "./util.js";
+import * as util from "../util.js";
 
 function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
 function indexToSymbol(i) { return String(i); }
+
+function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
+function symbolToIndex(symbol) { return Number(symbol); }
 
 class Rules extends HTMLElement {
 	constructor() {
@@ -21,6 +24,7 @@ class Rules extends HTMLElement {
 		table.createTBody();
 		this.append(table);
 
+		this._built = true;
 		this._fill();
 	}
 
@@ -34,6 +38,12 @@ class Rules extends HTMLElement {
 		}
 	}
 
+	reset() {
+
+		
+		
+	}
+
 	_fill() {
 		const table = this.querySelector("table");
 		const tHead = table.tHead;
@@ -45,7 +55,11 @@ class Rules extends HTMLElement {
 		let row = tHead.insertRow();
 		for (let i=-1;i<this.states;i++) {
 			let cell = row.appendChild(document.createElement("th"));
-			if (i > -1) { cell.dataset.state = indexToState(i); }
+			if (i > -1) { 
+				let state = document.createElement("tm-state");
+				state.value = indexToState(i);
+				cell.append(state);
+			}
 		}
 
 		for (let j=0;j<this.symbols;j++) {
@@ -54,14 +68,15 @@ class Rules extends HTMLElement {
 			for (let i=-1;i<this.states;i++) {
 				if (i > -1) {
 					cell = row.insertCell();
-					cell.dataset.state = indexToState(i);
-					let instruction = document.createElement("tm-instruction");
-					cell.append(instruction);
+					cell.append(document.createElement("tm-symbol"));
+					cell.append(document.createElement("tm-direction"));
+					cell.append(document.createElement("tm-state"));
 				} else {
 					cell = row.appendChild(document.createElement("th"));
+					let symbol = document.createElement("tm-symbol");
+					symbol.value = indexToSymbol(j);
+					cell.append(symbol);
 				}
-
-				cell.dataset.symbol = indexToSymbol(j);
 			}
 		}
 	}
@@ -71,7 +86,11 @@ class Rules extends HTMLElement {
 		if (!cell) { return null; }
 
 		[...this.querySelectorAll("td")].forEach(c => c.classList.toggle("current", c == cell));
-		return cell.querySelector("tm-instruction");
+		return {
+			symbol: cell.querySelector("tm-symbol"),
+			direction: cell.querySelector("tm-direction"),
+			state: cell.querySelector("tm-state")
+		}
 	}
 
 	fillBusyBeaver() {
@@ -82,10 +101,9 @@ class Rules extends HTMLElement {
 				let value = BUSY[this.states][`${state}-${symbol}`];
 
 				let cell = this._getCell(state, symbol);
-				let instruction = cell.querySelector("tm-instruction")
-				instruction.symbol = value.charAt(0);
-				instruction.direction = value.charAt(1);
-				instruction.state = value.charAt(2);
+				cell.querySelector("tm-symbol").value = value.charAt(0);
+				cell.querySelector("tm-direction").value = value.charAt(1);
+				cell.querySelector("tm-state").value = value.charAt(2);
 			}
 		}
 
@@ -93,8 +111,9 @@ class Rules extends HTMLElement {
 	}
 
 	_getCell(state, symbol) {
-		const table = this.querySelector("table");
-		return table.querySelector(`[data-state="${state}"][data-symbol="${symbol}"]`);
+		let rowIndex = symbolToIndex(symbol);
+		let colIndex = stateToIndex(state);
+		return this.querySelector("table").tBodies[0].rows[rowIndex].cells[colIndex+1];
 	}
 }
 

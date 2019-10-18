@@ -5,9 +5,6 @@ tm-machine {
   width: var(--symbol-width);
   text-align: center;
 }
-tm-machine::before {
-  transition: all var(--duration) var(--duration);
-}
 tm-rules {
   text-align: center;
 }
@@ -33,7 +30,7 @@ tm-rules td {
   transition: all var(--duration);
 }
 tm-rules td.current {
-  box-shadow: inset 0 0 4px #000;
+  box-shadow: inset 0 0 0.5em dodgerblue;
 }
 tm-tape {
   position: relative;
@@ -62,112 +59,77 @@ tm-scene[skin=plain] {
   font-family: monospace;
   line-height: 1.25;
 }
-tm-scene[skin=plain] tm-rules th[data-state]::before {
-  content: attr(data-state);
-}
-tm-scene[skin=plain] tm-rules th[data-symbol]::before {
-  content: attr(data-symbol);
-}
-tm-scene[skin=plain] tm-instruction::before {
-  content: attr(symbol);
-}
-tm-scene[skin=plain] tm-instruction::after {
-  content: attr(state);
-}
 tm-scene[skin=plain] tm-machine {
   white-space: pre;
 }
-tm-scene[skin=plain] tm-machine::before {
-  content: attr(state) "\A";
-}
 tm-scene[skin=plain] tm-machine::after {
-  content: "↓";
+  content: "\A↓";
 }
 tm-scene[skin=plain] tm-tape {
   height: calc(1.25 * 1em);
 }
-tm-scene[skin=plain] tm-tape tm-symbol::before {
-  content: attr(value);
-}
 tm-scene[skin=robot] {
-  --symbol-width: 1.3em;
+  --symbol-width: 1.2em;
 }
-tm-scene[skin=robot] tm-instruction::before,
-tm-scene[skin=robot] tm-instruction::after {
-  margin: 0 4px;
+tm-scene[skin=robot] tm-rules tm-direction {
+  margin: 0 0.2em;
 }
-tm-scene[skin=robot] tm-machine::before,
-tm-scene[skin=robot] tm-rules th[data-state]::before,
-tm-scene[skin=robot] tm-instruction::after {
-  content: "🤖";
+tm-scene[skin=robot] tm-rules tm-state {
+  display: inline-block;
+}
+tm-scene[skin=robot] tm-machine,
+tm-scene[skin=robot] tm-state {
   filter: drop-shadow(0 0 3px var(--color));
 }
-tm-scene[skin=robot] tm-symbol::before,
-tm-scene[skin=robot] tm-rules th[data-symbol]::before,
-tm-scene[skin=robot] tm-instruction::before {
-  content: "💡";
-}
-tm-scene[skin=robot] tm-symbol[value="0"],
-tm-scene[skin=robot] tm-rules th[data-symbol="0"],
-tm-scene[skin=robot] tm-instruction[symbol="0"]::before {
-  filter: grayscale(1);
-}
-tm-scene[skin=robot] tm-machine[state="H"],
-tm-scene[skin=robot] tm-instruction[state="H"]::after {
+tm-scene[skin=robot] tm-machine[state=H],
+tm-scene[skin=robot] tm-state[value=H] {
   transform: rotate(90deg);
 }
 tm-scene[skin=robot] tm-symbol {
   transition: filter var(--duration);
 }
-tm-scene[skin=circle] tm-machine {
+tm-scene[skin=robot] tm-symbol[value="0"] {
+  filter: grayscale(1);
+}
+tm-scene[skin=robot] tm-tape {
+  height: 1.5em;
+}
+tm-scene[skin=circle] tm-machine,
+tm-scene[skin=circle] tm-state {
   width: var(--symbol-width);
   height: var(--symbol-width);
   border-radius: 50%;
   border: 3px solid black;
-  background-color: currentColor;
+  background-color: var(--color);
 }
-tm-scene[skin=circle] tm-machine[state=A] {
-  color: red;
+tm-controls button {
+  font: inherit;
 }
-tm-scene[skin=circle] tm-machine[state=B] {
-  color: green;
-}
-tm-instruction::before,
-tm-instruction::after {
-  display: inline-block;
-}
-tm-machine[state="A"],
-tm-rules th[data-state="A"],
-tm-instruction[state="A"]::after {
+tm-machine[state=A],
+tm-state[value=A] {
   --color: red;
 }
-tm-machine[state="B"],
-tm-rules th[data-state="B"],
-tm-instruction[state="B"]::after {
+tm-machine[state=B],
+tm-state[value=B] {
   --color: lime;
 }
-tm-machine[state="C"],
-tm-rules th[data-state="C"],
-tm-instruction[state="C"]::after {
+tm-machine[state=C],
+tm-state[value=C] {
   --color: blue;
 }
-tm-machine[state="D"],
-tm-rules th[data-state="D"],
-tm-instruction[state="D"]::after {
+tm-machine[state=D],
+tm-state[value=D] {
   --color: yellow;
 }
-tm-machine[state="E"],
-tm-rules th[data-state="E"],
-tm-instruction[state="E"]::after {
+tm-machine[state=E],
+tm-state[value=E] {
   --color: magenta;
 }
-tm-machine[state="F"],
-tm-rules th[data-state="F"],
-tm-instruction[state="F"]::after {
+tm-machine[state=F],
+tm-state[value=F] {
   --color: cyan;
 }
-tm-machine[state="H"],
-tm-rules th[data-state="H"],
-tm-instruction[state="H"]::after {
+tm-machine[state=H],
+tm-state[value=H] {
   --color: black;
 }

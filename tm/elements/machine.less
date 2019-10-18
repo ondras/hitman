@@ -1,0 +1,7 @@
+tm-machine {
+	transition: all var(--duration) var(--duration), left var(--duration); // move first, others second
+	position: relative;
+	left: calc(var(--position) * var(--symbol-width));
+	width: var(--symbol-width);
+	text-align: center;
+}

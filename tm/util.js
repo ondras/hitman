@@ -1,3 +1,33 @@
+export function getStateString(state, node) {
+	let scene = node.closest("tm-scene");
+	let skin = (scene ? scene.skin : "");
+
+	switch (skin) {
+		case "robot": return "🤖"; break;
+		default: return state; break;
+	}
+}
+
+export function getSymbolString(symbol, node) {
+	let scene = node.closest("tm-scene");
+	let skin = (scene ? scene.skin : "");
+
+	switch (skin) {
+		case "robot": return "💡"; break;
+		default: return symbol; break;
+	}
+}
+
+export function getDirectionString(direction, node) {
+	let scene = node.closest("tm-scene");
+	let skin = (scene ? scene.skin : "");
+
+	switch (skin) {
+		case "robot": return {"L":"🡄","R":"🡆"}[direction]; break;
+		default: return direction; break;
+	}
+}
+
 export function bindInputAndProperty(input, node, property) {
 	function inputToProperty() {
 		node.style.setProperty(property, input.value);
@@ -24,12 +54,13 @@ export function reflectAttribute(Ctor, name, def=null) {
 			if (value === null) {
 				return this.removeAttribute(name);
 			} else {
+//				console.log(this, name, value)
 				return this.setAttribute(name, value);
 			}
 		}
 	});
 }
 
-function getProperty(node, prop) {
-	return getComputedStyle(node).getPropertyValue(prop);
+export class SceneAssociated extends HTMLElement {
+	get scene() { return this.closest("tm-scene"); }
 }
