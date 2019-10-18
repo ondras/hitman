@@ -1,19 +1,17 @@
 import * as util from "../util.js";
 
-class State extends HTMLElement {
+class State extends util.SceneAssociated {
 	static get observedAttributes() { return ["value"]; }
-
-	connectedCallback() {
-		this.updateContent();
-	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		switch (name) {
-			case "value": this.updateContent(); break;
+			case "value": this._updateContent(); break;
 		}
 	}
 
-	updateContent() {
+	_onSceneChange() { this._updateContent(); }
+
+	_updateContent() {
 		this.textContent = util.getStateString(this.value, this);
 	}
 }

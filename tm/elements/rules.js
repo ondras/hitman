@@ -1,6 +1,7 @@
 import * as util from "../util.js";
 
-class Rules extends HTMLElement {
+// FIXME je nutne SceneAssociated?
+class Rules extends util.SceneAssociated {
 	constructor() {
 		super();
 		this._built = false;
@@ -9,6 +10,8 @@ class Rules extends HTMLElement {
 	static get observedAttributes() { return ["states", "symbols"]; }
 
 	connectedCallback() {
+		super.connectedCallback();
+
 		if (this._built) { return; }
 
 		this.innerHTML = "";

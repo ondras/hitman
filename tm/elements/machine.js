@@ -1,26 +1,24 @@
 import * as util from "../util.js";
 
-class Machine extends HTMLElement {
+class Machine extends util.SceneAssociated {
 	static get observedAttributes() { return ["position", "state"]; }
-
-	connectedCallback() {
-		this.updateContent();
-	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		switch (name) {
-			case "state": this.updateContent(); break;
+			case "state": this._updateContent(); break;
 			case "position": this.style.setProperty("--position", newValue); break;
 		}
-	}
-
-	updateContent() {
-		this.textContent = util.getStateString(this.state, this);
 	}
 
 	reset() {
 		this.position = 0;
 		this.state = "A";
+	}
+
+	_onSceneChange() { this._updateContent(); }
+
+	_updateContent() {
+		this.textContent = util.getStateString(this.state, this);
 	}
 }
 

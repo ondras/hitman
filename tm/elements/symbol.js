@@ -1,20 +1,18 @@
 import * as util from "../util.js";
 
-class Symbol extends HTMLElement {
+class Symbol extends util.SceneAssociated {
 	static get observedAttributes() { return ["value", "position"]; }
-
-	connectedCallback() {
-		this.updateContent();
-	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		switch (name) {
 			case "position": this.style.setProperty("--position", newValue); break;
-			case "value": this.updateContent(); break;
+			case "value": this._updateContent(); break;
 		}
 	}
 
-	updateContent() {
+	_onSceneChange() { this._updateContent(); }
+
+	_updateContent() {
 		this.textContent = util.getSymbolString(this.value, this);
 	}
 }

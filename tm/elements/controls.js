@@ -30,7 +30,7 @@ class Controls extends util.SceneAssociated {
 	}
 
 	connectedCallback() {
-		if (this._built) { return; }
+		super.connectedCallback();
 
 		this._append();
 	}
@@ -78,6 +78,10 @@ class Controls extends util.SceneAssociated {
 		return this._step(this.scene.machine, this.scene.tape, this.scene.rules);
 	}
 
+	_onSceneChange() {
+		this._controls.skin.value = this.scene.skin;
+	}
+
 	async _step(machine, tape, rules) {
 		if (machine.state == "H") { return this.pause(); }
 
@@ -114,10 +118,7 @@ class Controls extends util.SceneAssociated {
 
 		node = document.createElement("select");
 		["plain", "robot"].forEach(name => node.appendChild(new Option(name, name)));
-		// FIXME value
-		node.addEventListener("change", e => {
-			if (this.scene) { this.scene.skin = e.target.value; }
-		});
+		node.addEventListener("change", e => this.scene.skin = e.target.value);
 		controls.skin = node;
 
 		return controls;

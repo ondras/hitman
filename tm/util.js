@@ -1,6 +1,5 @@
 export function getStateString(state, node) {
-	let scene = node.closest("tm-scene");
-	let skin = (scene ? scene.skin : "");
+	let skin = (node.scene ? node.scene.skin : "");
 
 	switch (skin) {
 		case "robot": return "🤖"; break;
@@ -9,8 +8,7 @@ export function getStateString(state, node) {
 }
 
 export function getSymbolString(symbol, node) {
-	let scene = node.closest("tm-scene");
-	let skin = (scene ? scene.skin : "");
+	let skin = (node.scene ? node.scene.skin : "");
 
 	switch (skin) {
 		case "robot": return "💡"; break;
@@ -19,8 +17,7 @@ export function getSymbolString(symbol, node) {
 }
 
 export function getDirectionString(direction, node) {
-	let scene = node.closest("tm-scene");
-	let skin = (scene ? scene.skin : "");
+	let skin = (node.scene ? node.scene.skin : "");
 
 	switch (skin) {
 		case "robot": return {"L":"🡄","R":"🡆"}[direction]; break;
@@ -54,7 +51,6 @@ export function reflectAttribute(Ctor, name, def=null) {
 			if (value === null) {
 				return this.removeAttribute(name);
 			} else {
-//				console.log(this, name, value)
 				return this.setAttribute(name, value);
 			}
 		}
@@ -63,4 +59,22 @@ export function reflectAttribute(Ctor, name, def=null) {
 
 export class SceneAssociated extends HTMLElement {
 	get scene() { return this.closest("tm-scene"); }
+
+	constructor() {
+		super();
+		this._sceneObserver = new MutationObserver(mutations => this._onSceneChange());
+	}
+
+	connectedCallback() {
+		if (this.scene) {
+			this._sceneObserver.observe(this.scene, {attributes:true});
+			customElements.whenDefined("tm-scene").then(() => this._onSceneChange());
+		}
+	}
+
+	disconnectedCallback() {
+		this._sceneObserver.disconnect();
+	}
+
+	_onSceneChange() {}
 }
