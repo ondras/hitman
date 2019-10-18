@@ -1,11 +1,5 @@
 import * as util from "../util.js";
 
-function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
-function indexToSymbol(i) { return String(i); }
-
-function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
-function symbolToIndex(symbol) { return Number(symbol); }
-
 class Rules extends HTMLElement {
 	constructor() {
 		super();
@@ -39,9 +33,7 @@ class Rules extends HTMLElement {
 	}
 
 	reset() {
-
-		
-		
+		this._markCurrent(null);
 	}
 
 	_fill() {
@@ -85,7 +77,8 @@ class Rules extends HTMLElement {
 		let cell = this._getCell(state, symbol);
 		if (!cell) { return null; }
 
-		[...this.querySelectorAll("td")].forEach(c => c.classList.toggle("current", c == cell));
+		this._markCurrent(cell);
+
 		return {
 			symbol: cell.querySelector("tm-symbol"),
 			direction: cell.querySelector("tm-direction"),
@@ -98,7 +91,7 @@ class Rules extends HTMLElement {
 			for (let i=0;i<this.states;i++) {
 				let state = indexToState(i);
 				let symbol = indexToSymbol(j);
-				let value = BUSY[this.states][`${state}-${symbol}`];
+				let value = BUSY[this.states][`${state}${symbol}`];
 
 				let cell = this._getCell(state, symbol);
 				cell.querySelector("tm-symbol").value = value.charAt(0);
@@ -115,7 +108,17 @@ class Rules extends HTMLElement {
 		let colIndex = stateToIndex(state);
 		return this.querySelector("table").tBodies[0].rows[rowIndex].cells[colIndex+1];
 	}
+
+	_markCurrent(cell) {
+		[...this.querySelectorAll("td")].forEach(c => c.classList.toggle("current", c == cell));
+	}
 }
+
+function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
+function indexToSymbol(i) { return String(i); }
+
+function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
+function symbolToIndex(symbol) { return Number(symbol); }
 
 util.reflectAttribute(Rules, "states", 1);
 util.reflectAttribute(Rules, "symbols", 2);
@@ -123,28 +126,28 @@ customElements.define("tm-rules", Rules);
 
 const BUSY = {
 	"2": {
-		"A-0": "1RB",
-		"B-0": "1LA",
-		"A-1": "1LB",
-		"B-1": "1RH"
+		"A0": "1RB",
+		"B0": "1LA",
+		"A1": "1LB",
+		"B1": "1RH"
 	},
 
 	"3": {
-		"A-0": "1RB",
-		"B-0": "0RC",
-		"C-0": "1LC",
-		"A-1": "1RH",
-		"B-1": "1RB",
-		"C-1": "1LA"
+		"A0": "1RB",
+		"B0": "0RC",
+		"C0": "1LC",
+		"A1": "1RH",
+		"B1": "1RB",
+		"C1": "1LA"
 	},
 	"4": {
-		"A-0": "1RB",
-		"B-0": "1LA",
-		"C-0": "1RH",
-		"D-0": "1RD",
-		"A-1": "1LB",
-		"B-1": "0LC",
-		"C-1": "1LD",
-		"D-1": "0RA"
+		"A0": "1RB",
+		"B0": "1LA",
+		"C0": "1RH",
+		"D0": "1RD",
+		"A1": "1LB",
+		"B1": "0LC",
+		"C1": "1LD",
+		"D1": "0RA"
 	}
 }
