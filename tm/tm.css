@@ -104,7 +104,6 @@ tm-scene[skin=circle] tm-state {
 }
 tm-controls {
   display: flex;
-  flex-direction: row;
 }
 tm-controls button {
   line-height: 1.25;

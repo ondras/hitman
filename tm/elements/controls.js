@@ -26,6 +26,7 @@ class Controls extends util.SceneAssociated {
 
 	constructor() {
 		super();
+		this._steps = 0;
 		this.playing = false;
 		this._controls = this._buildControls();
 	}
@@ -70,10 +71,14 @@ class Controls extends util.SceneAssociated {
 	}
 
 	reset() {
+		this._steps = 0;
+
 		// FIXME
 		this.scene.tape.reset();
 		this.scene.machine.reset();
 		this.scene.rules.reset();
+
+		this._updateStats();
 	}
 
 	async step() {
@@ -84,12 +89,16 @@ class Controls extends util.SceneAssociated {
 	_onSceneChange() {
 		this._controls.skin.value = this.scene.skin;
 		this._controls.speed.value = Number(getProperty(this.scene, TRANSITION));
+		this._updateStats();
 	}
 
 	async _step(machine, tape, rules) {
 		if (machine.state == "H") { return this.pause(); }
 
 		transitionToNextState(machine, tape, rules);
+
+		this._steps++;
+		this._updateStats();
 
 		let time = Number(getProperty(machine, TRANSITION));
 		await sleep(time);
@@ -128,16 +137,24 @@ class Controls extends util.SceneAssociated {
 		node.addEventListener("change", e => this.scene.skin = e.target.value);
 		controls.skin = node;
 
+		node = document.createElement("span");
+		node.className = "score";
+		controls.stats = node;
+
 		return controls;
 	}
 
 	_append() {
 		this.innerHTML = "";
 
-		let names = (this.what || "reset step playpause speed skin").split(" ");
+		let names = (this.what || "reset step playpause speed skin stats").split(" ");
 		names.map(name => this._controls[name])
 			.filter(item => item)
 			.forEach(item => this.append(item));
+	}
+
+	_updateStats() {
+		this._controls.stats.textContent = `Steps: ${this._steps}, score: ${this.scene.tape.getScore()}`;
 	}
 }
 

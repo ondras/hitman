@@ -17,6 +17,10 @@ class Tape extends HTMLElement {
 		}
 		symbol.value = value;
 	}
+
+	getScore() {
+		return this.querySelectorAll('tm-symbol[value="1"]').length;
+	}
 }
 
 customElements.define("tm-tape", Tape);
