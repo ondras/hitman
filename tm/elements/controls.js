@@ -1,5 +1,8 @@
 import * as util from "../util.js";
 
+const TRANSITION = "--transition";
+const PLAYPAUSE = ["⏵", "⏸"];
+
 function getProperty(node, prop) {
 	return getComputedStyle(node).getPropertyValue(prop);
 }
@@ -16,8 +19,6 @@ function transitionToNextState(machine, tape, rules) {
 	tape.setValue(machine.position, instruction.symbol.value);
 	machine.state = instruction.state.value;
 	machine.position += (instruction.direction.value == "L" ? -1 : 1);
-
-	return (machine.state != "H");
 }
 
 class Controls extends util.SceneAssociated {
@@ -48,6 +49,7 @@ class Controls extends util.SceneAssociated {
 		if (this.playing) { return; }
 		this.playing = true;
 
+		this._controls.playpause.textContent = PLAYPAUSE[1];
 		this._controls.step.disabled = true;
 		this._controls.reset.disabled = true;
 
@@ -61,6 +63,7 @@ class Controls extends util.SceneAssociated {
 	pause() {
 		this._controls.step.disabled = false;
 		this._controls.reset.disabled = false;
+		this._controls.playpause.textContent = PLAYPAUSE[0];
 
 		if (!this.playing) { return; }
 		this.playing = false;
@@ -80,6 +83,7 @@ class Controls extends util.SceneAssociated {
 
 	_onSceneChange() {
 		this._controls.skin.value = this.scene.skin;
+		this._controls.speed.value = Number(getProperty(this.scene, TRANSITION));
 	}
 
 	async _step(machine, tape, rules) {
@@ -87,7 +91,7 @@ class Controls extends util.SceneAssociated {
 
 		transitionToNextState(machine, tape, rules);
 
-		let time = Number(getProperty(machine, "--transition"));
+		let time = Number(getProperty(machine, TRANSITION));
 		await sleep(time);
 
 		if (machine.state == "H") { this.pause(); }
@@ -104,15 +108,18 @@ class Controls extends util.SceneAssociated {
 
 		node = document.createElement("input");
 		node.type = "range";
+		node.min = "0"; // FIXME
+		node.max = "5000";
+		node.addEventListener("input", e => this.scene.style.setProperty(TRANSITION, e.target.value));
 		controls.speed = node;
 
 		node = document.createElement("button");
-		node.textContent = "playpause";
+		node.textContent = PLAYPAUSE[0];
 		node.addEventListener("click", e => this.playing ? this.pause() : this.play());
 		controls.playpause = node;
 
 		node = document.createElement("button");
-		node.textContent = "step";
+		node.textContent = "1";
 		node.addEventListener("click", e => this.step());
 		controls.step = node;
 

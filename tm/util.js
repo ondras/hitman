@@ -25,18 +25,6 @@ export function getDirectionString(direction, node) {
 	}
 }
 
-export function bindInputAndProperty(input, node, property) {
-	function inputToProperty() {
-		node.style.setProperty(property, input.value);
-	}
-	function propertyToInput() {
-		input.value = Number(getProperty(node, property));
-	}
-
-	input.addEventListener("input", inputToProperty);
-	propertyToInput();
-}
-
 export function reflectAttribute(Ctor, name, def=null) {
 	Object.defineProperty(Ctor.prototype, name, {
 		get() {

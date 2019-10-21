@@ -6,8 +6,6 @@
 	</head>
 
 	<body>
-		<input type="range" min="0" max="5000" />
-
 		<tm-scene skin="robot">
 			<tm-rules states="2"></tm-rules>
 			<tm-machine state="A" position="0"></tm-machine>
@@ -24,7 +22,6 @@
 			}
 			tm-rules th, tm-rules td {
 				padding: 0.1em 0.3em;
-
 			}
 			tm-rules td {
 				font-size: 60%;
@@ -34,10 +31,9 @@
 			}
 		</style>
 
-
-	<script type="module">
-		import * as tm from "./tm/tm.js";
-		document.querySelector("tm-rules").fillBusyBeaver();
-	</script>
+		<script type="module">
+			import * as tm from "./tm/tm.js";
+			document.querySelector("tm-rules").fillBusyBeaver();
+		</script>
 	</body>
 </html>

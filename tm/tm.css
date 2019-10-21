@@ -102,8 +102,12 @@ tm-scene[skin=circle] tm-state {
   border: 3px solid black;
   background-color: var(--color);
 }
+tm-controls {
+  display: flex;
+  flex-direction: row;
+}
 tm-controls button {
-  font: inherit;
+  line-height: 1.25;
 }
 tm-machine[state=A],
 tm-state[value=A] {
