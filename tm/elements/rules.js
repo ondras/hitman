@@ -40,6 +40,9 @@ class Rules extends util.SceneAssociated {
 		this._markCurrent(null);
 	}
 
+	get editable() { return this.hasAttribute("editable"); }
+	set editable(editable) { return (editable ? this.setAttribute("editable", editable) : this.removeAttribute("editable")); }
+
 	_fill() {
 		const table = this.querySelector("table");
 		const tHead = table.tHead;

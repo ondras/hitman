@@ -32,6 +32,9 @@ tm-rules td {
 tm-rules td.current {
   box-shadow: inset 0 0 0.5em dodgerblue;
 }
+tm-rules:not([editable]) button {
+  display: none;
+}
 tm-tape {
   position: relative;
   width: var(--symbol-width);
