@@ -11,6 +11,7 @@
 			<tm-machine state="A" position="0"></tm-machine>
 			<tm-tape></tm-tape>
 			<tm-controls></tm-controls>
+			<div id="stats"></div>
 		</tm-scene>
 
 		<style>
@@ -37,7 +38,12 @@
 
 		<script type="module">
 			import * as tm from "./tm/tm.js";
+
 			document.querySelector("tm-rules").fillBusyBeaver();
+
+			document.querySelector("tm-controls").addEventListener("change", e => {
+				document.querySelector("#stats").textContent = `Steps: ${e.detail.steps}, score: ${e.detail.score}`;
+			});
 		</script>
 	</body>
 </html>

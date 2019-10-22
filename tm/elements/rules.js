@@ -5,6 +5,7 @@ class Rules extends util.SceneAssociated {
 	constructor() {
 		super();
 		this._built = false;
+		this._editing = false;
 	}
 
 	static get observedAttributes() { return ["states", "symbols"]; }
@@ -54,6 +55,11 @@ class Rules extends util.SceneAssociated {
 				let state = document.createElement("tm-state");
 				state.value = indexToState(i);
 				cell.append(state);
+			} else {
+				let button = document.createElement("button");
+				button.textContent = "⚙️";
+				button.addEventListener("click", e => this._toggleEditing());
+				cell.append(button);
 			}
 		}
 
@@ -63,9 +69,7 @@ class Rules extends util.SceneAssociated {
 			for (let i=-1;i<this.states;i++) {
 				if (i > -1) {
 					cell = row.insertCell();
-					cell.append(document.createElement("tm-symbol"));
-					cell.append(document.createElement("tm-direction"));
-					cell.append(document.createElement("tm-state"));
+					fillCellFromString(cell, "1RA");
 				} else {
 					cell = row.appendChild(document.createElement("th"));
 					let symbol = document.createElement("tm-symbol");
@@ -82,11 +86,7 @@ class Rules extends util.SceneAssociated {
 
 		this._markCurrent(cell);
 
-		return {
-			symbol: cell.querySelector("tm-symbol"),
-			direction: cell.querySelector("tm-direction"),
-			state: cell.querySelector("tm-state")
-		}
+		return extractInstruction(cell);
 	}
 
 	fillBusyBeaver() {
@@ -97,9 +97,7 @@ class Rules extends util.SceneAssociated {
 				let value = BUSY[this.states][`${state}${symbol}`];
 
 				let cell = this._getCell(state, symbol);
-				cell.querySelector("tm-symbol").value = value.charAt(0);
-				cell.querySelector("tm-direction").value = value.charAt(1);
-				cell.querySelector("tm-state").value = value.charAt(2);
+				fillCellFromString(cell, value)
 			}
 		}
 
@@ -115,6 +113,20 @@ class Rules extends util.SceneAssociated {
 	_markCurrent(cell) {
 		[...this.querySelectorAll("td")].forEach(c => c.classList.toggle("current", c == cell));
 	}
+
+	_toggleEditing() {
+		this._editing = !this._editing;
+		const table = this.querySelector("table");
+		let cells = [...table.querySelectorAll("tbody td")];
+		cells.forEach(cell => {
+			if (this._editing) {
+				fillCellWithSelects(cell, this);
+			} else {
+				let str = getSelectValues(cell);
+				fillCellFromString(cell, str);
+			}
+		});
+	}
 }
 
 function indexToState(i) { return String.fromCharCode("A".charCodeAt(0) + i); }
@@ -122,6 +134,61 @@ function indexToSymbol(i) { return String(i); }
 
 function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
 function symbolToIndex(symbol) { return Number(symbol); }
+
+function extractInstruction(cell) {
+	return {
+		symbol: cell.querySelector("tm-symbol"),
+		direction: cell.querySelector("tm-direction"),
+		state: cell.querySelector("tm-state")
+	}
+}
+
+function fillCellFromString(cell, string) {
+	cell.innerHTML = "";
+
+	let symbol = document.createElement("tm-symbol");
+	symbol.value = string.charAt(0);
+	cell.append(symbol);
+
+	let direction = document.createElement("tm-direction");
+	direction.value = string.charAt(1);
+	cell.append(direction);
+
+	let state = document.createElement("tm-state");
+	state.value = string.charAt(2);
+	cell.append(state);
+}
+
+function fillCellWithSelects(cell, scene) {
+	let instruction = extractInstruction(cell);
+	cell.innerHTML = "";
+
+	let select;
+
+	select = document.createElement("select");
+	for (let i=0;i<scene.symbols;i++) {
+		select.appendChild(new Option(indexToSymbol(i)));
+	}
+	select.value = instruction.symbol.value;
+	cell.append(select);
+
+	select = document.createElement("select");
+	["L", "R"].forEach(dir => select.appendChild(new Option(dir)));;
+	select.value = instruction.direction.value;
+	cell.append(select);
+
+	select = document.createElement("select");
+	for (let i=0;i<scene.states;i++) {
+		select.appendChild(new Option(indexToState(i)));
+	}
+	select.appendChild(new Option("H"));
+	select.value = instruction.state.value;
+	cell.append(select);
+}
+
+function getSelectValues(cell) {
+	return [...cell.querySelectorAll("select")].map(s => s.value).join("");
+}
 
 util.reflectAttribute(Rules, "states", 1);
 util.reflectAttribute(Rules, "symbols", 2);
