@@ -1,6 +1,6 @@
 import * as util from "../util.js";
 
-class Symbol extends util.SceneAssociated {
+class Symbol extends util.RuntimeAssociated {
 	static get observedAttributes() { return ["value", "position"]; }
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -10,7 +10,12 @@ class Symbol extends util.SceneAssociated {
 		}
 	}
 
-	_onSceneChange() { this._updateContent(); }
+	runtimeConnectedCallback() { this._updateContent(); }
+	runtimeAttributeChangedCallback(name) {
+		switch (name) {
+			case "skin": this._updateContent(); break;
+		}
+	}
 
 	_updateContent() {
 		this.textContent = util.getSymbolString(this.value, this);

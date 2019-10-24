@@ -6,16 +6,18 @@
 	</head>
 
 	<body>
-		<tm-scene skin="robot">
+		<tm-runtime skin="robot">
 			<tm-rules states="2"></tm-rules>
 			<tm-machine state="A" position="0"></tm-machine>
 			<tm-tape></tm-tape>
-			<tm-controls></tm-controls>
+			<tm-controls what="reset step playpause"></tm-controls>
+			<tm-controls what="skin"></tm-controls>
+			<tm-controls what="speed"></tm-controls>
 			<div id="stats"></div>
-		</tm-scene>
+		</tm-runtime>
 
 		<style>
-			tm-scene {
+			tm-runtime {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
@@ -41,7 +43,7 @@
 
 			document.querySelector("tm-rules").fillBusyBeaver();
 
-			document.querySelector("tm-controls").addEventListener("change", e => {
+			document.querySelector("tm-runtime").addEventListener("stats", e => {
 				document.querySelector("#stats").textContent = `Steps: ${e.detail.steps}, score: ${e.detail.score}`;
 			});
 		</script>

@@ -1,6 +1,6 @@
 import * as util from "../util.js";
 
-class Machine extends util.SceneAssociated {
+class Machine extends util.RuntimeAssociated {
 	static get observedAttributes() { return ["position", "state"]; }
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -15,7 +15,12 @@ class Machine extends util.SceneAssociated {
 		this.state = "A";
 	}
 
-	_onSceneChange() { this._updateContent(); }
+	runtimeConnectedCallback() { this._updateContent(); }
+	runtimeAttributeChangedCallback(name) {
+		switch (name) {
+			case "skin": this._updateContent(); break;
+		}
+	}
 
 	_updateContent() {
 		this.textContent = util.getStateString(this.state, this);

@@ -1,5 +1,11 @@
+export const TRANSITION = "--transition";
+
+export function getProperty(node, prop) {
+	return getComputedStyle(node).getPropertyValue(prop);
+}
+
 export function getStateString(state, node) {
-	let skin = (node.scene ? node.scene.skin : "");
+	let skin = (node.runtime ? node.runtime.skin : "");
 
 	switch (skin) {
 		case "robot": return "🤖"; break;
@@ -8,7 +14,7 @@ export function getStateString(state, node) {
 }
 
 export function getSymbolString(symbol, node) {
-	let skin = (node.scene ? node.scene.skin : "");
+	let skin = (node.runtime ? node.runtime.skin : "");
 
 	switch (skin) {
 		case "robot": return "💡"; break;
@@ -17,7 +23,7 @@ export function getSymbolString(symbol, node) {
 }
 
 export function getDirectionString(direction, node) {
-	let skin = (node.scene ? node.scene.skin : "");
+	let skin = (node.runtime ? node.runtime.skin : "");
 
 	switch (skin) {
 		case "robot": return {"L":"🡄","R":"🡆"}[direction]; break;
@@ -45,24 +51,25 @@ export function reflectAttribute(Ctor, name, def=null) {
 	});
 }
 
-export class SceneAssociated extends HTMLElement {
-	get scene() { return this.closest("tm-scene"); }
+export class RuntimeAssociated extends HTMLElement {
+	get runtime() { return this.closest("tm-runtime"); }
 
 	constructor() {
 		super();
-		this._sceneObserver = new MutationObserver(mutations => this._onSceneChange());
+		this._runtimeObserver = new MutationObserver(mutations => this.runtimeAttributeChangedCallback(mutations[0].attributeName));
 	}
 
 	connectedCallback() {
-		if (this.scene) {
-			this._sceneObserver.observe(this.scene, {attributes:true});
-			customElements.whenDefined("tm-scene").then(() => this._onSceneChange());
+		if (this.runtime) {
+			this._runtimeObserver.observe(this.runtime, {attributes:true});
+			customElements.whenDefined("tm-runtime").then(() => this.runtimeConnectedCallback());
 		}
 	}
 
 	disconnectedCallback() {
-		this._sceneObserver.disconnect();
+		this._runtimeObserver.disconnect();
 	}
 
-	_onSceneChange() {}
+	runtimeConnectedCallback() {}
+	runtimeAttributeChangedCallback(name) {}
 }

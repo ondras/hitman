@@ -1,7 +1,6 @@
 import * as util from "../util.js";
 
-// FIXME je nutne SceneAssociated?
-class Rules extends util.SceneAssociated {
+class Rules extends util.RuntimeAssociated {
 	constructor() {
 		super();
 		this._built = false;
@@ -162,14 +161,14 @@ function fillCellFromString(cell, string) {
 	cell.append(state);
 }
 
-function fillCellWithSelects(cell, scene) {
+function fillCellWithSelects(cell, rules) {
 	let instruction = extractInstruction(cell);
 	cell.innerHTML = "";
 
 	let select;
 
 	select = document.createElement("select");
-	for (let i=0;i<scene.symbols;i++) {
+	for (let i=0;i<rules.symbols;i++) {
 		select.appendChild(new Option(indexToSymbol(i)));
 	}
 	select.value = instruction.symbol.value;
@@ -181,7 +180,7 @@ function fillCellWithSelects(cell, scene) {
 	cell.append(select);
 
 	select = document.createElement("select");
-	for (let i=0;i<scene.states;i++) {
+	for (let i=0;i<rules.states;i++) {
 		select.appendChild(new Option(indexToState(i)));
 	}
 	select.appendChild(new Option("H"));
