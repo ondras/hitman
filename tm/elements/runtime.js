@@ -11,20 +11,14 @@ class Runtime extends HTMLElement {
 		this._dispatchStats();
 	}
 
-	async attributeChangedCallback(name, oldValue, newValue) {
+	attributeChangedCallback(name, oldValue, newValue) {
 		switch (name) {
 			case "running":
 				let wasRunning = (oldValue !== null);
 				let isRunning = (newValue !== null);
 				if (wasRunning == isRunning) { return; }
 
-				if (isRunning) {
-					let {machine, tape, rules} = this;
-					while (1) {
-						await this._step(machine, tape, rules);
-						if (!this.running) { return; }
-					}
-				}
+				if (isRunning) { this._loop(); }
 			break;
 		}
 	}
@@ -45,21 +39,32 @@ class Runtime extends HTMLElement {
 
 	async step() {
 		// FIXME
-		return this._step(this.machine, this.tape, this.rules);
+		this._runBatch(this.machine, this.tape, this.rules, 1);
+		this._dispatchStats();
 	}
 
-	async _step(machine, tape, rules) {
-		if (machine.state == "H") { return this.running = false; }
+	async _runBatch(machine, tape, rules, count) {
+		if (machine.state == "H") { return false; }
 
-		transitionToNextState(machine, tape, rules);
+		for (let i=0;i<count;i++) {
+			transitionToNextState(machine, tape, rules);
+			this._steps++;
+			if (machine.state == "H") { return false; }
+		}
 
-		this._steps++;
-		this._dispatchStats();
+		return true;
+	}
 
+	async _loop() {
+		let {machine, tape, rules} = this;
 		let time = Number(util.getProperty(machine, util.TRANSITION));
-		await sleep(time);
+		let count = (time ? 1 : 1000);
 
-		if (machine.state == "H") { this.running = false; }
+		while (this.running) {
+			this.running = await this._runBatch(machine, tape, rules, count);
+			this._dispatchStats();
+			this.running && await sleep(time);
+		}
 	}
 
 	_dispatchStats() {
