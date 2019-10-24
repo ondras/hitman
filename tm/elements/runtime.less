@@ -31,7 +31,6 @@ tm-runtime {
 
 		tm-rules tm-state { display: inline-block; } // does not transform otherwise
 
-
 		tm-machine, tm-state {
 			filter: drop-shadow(0 0 3px var(--color));
 		}
@@ -43,6 +42,22 @@ tm-runtime {
 		tm-symbol {
 			transition: filter var(--duration);
 			&[value="0"] { filter: grayscale(1); }
+		}
+
+		tm-tape {
+			height: 1.5em;
+		}
+	}
+
+	&[skin=fire] {
+		--symbol-width: 1.2em;
+
+		tm-machine, tm-state {
+			filter: drop-shadow(0 0 3px var(--color));
+		}
+
+		tm-symbol {
+			&[value="1"] { filter: hue-rotate(180deg); }
 		}
 
 		tm-tape {

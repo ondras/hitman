@@ -1,33 +1,36 @@
 export const TRANSITION = "--transition";
 
+const STATES = {
+	"robot": "🤖",
+	"fire": "🚒"
+}
+
+const SYMBOLS = {
+	"robot": "💡",
+	"fire": "🔥"
+}
+
 export function getProperty(node, prop) {
 	return getComputedStyle(node).getPropertyValue(prop);
 }
 
 export function getStateString(state, node) {
-	let skin = (node.runtime ? node.runtime.skin : "");
-
-	switch (skin) {
-		case "robot": return "🤖"; break;
-		default: return state; break;
-	}
+	let skin = node.runtime && node.runtime.skin;
+	return STATES[skin] || state;
 }
 
 export function getSymbolString(symbol, node) {
-	let skin = (node.runtime ? node.runtime.skin : "");
-
-	switch (skin) {
-		case "robot": return "💡"; break;
-		default: return symbol; break;
-	}
+	let skin = node.runtime && node.runtime.skin;
+	return SYMBOLS[skin] || symbol;
 }
 
 export function getDirectionString(direction, node) {
-	let skin = (node.runtime ? node.runtime.skin : "");
+	let skin = node.runtime && node.runtime.skin;
 
-	switch (skin) {
-		case "robot": return {"L":"🡄","R":"🡆"}[direction]; break;
-		default: return direction; break;
+	if (skin == "plain") {
+		return direction;
+	} else {
+		return {"L":"🡄","R":"🡆"}[direction];
 	}
 }
 

@@ -1,6 +1,7 @@
 import * as util from "../util.js";
 
 const PLAYPAUSE = ["⏵", "⏸"];
+const SKINS = ["plain", "circle", "robot", "fire"];
 
 class Controls extends util.RuntimeAssociated {
 	static get observedAttributes() { return ["what"]; }
@@ -76,7 +77,7 @@ class Controls extends util.RuntimeAssociated {
 		nodes.step = node;
 
 		node = document.createElement("select");
-		["plain", "robot"].forEach(name => node.appendChild(new Option(name, name)));
+		SKINS.forEach(name => node.appendChild(new Option(name, name)));
 		node.addEventListener("change", e => this.runtime.skin = e.target.value);
 		nodes.skin = node;
 
