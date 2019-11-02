@@ -1,7 +1,7 @@
 import * as util from "../util.js";
 
 const PLAYPAUSE = ["⏵", "⏸"];
-const SKINS = ["plain", "circle", "robot", "fire"];
+const SKINS = ["plain", "circle", "robot"];
 
 class Controls extends util.RuntimeAssociated {
 	static get observedAttributes() { return ["what"]; }
@@ -29,7 +29,8 @@ class Controls extends util.RuntimeAssociated {
 	runtimeConnectedCallback() {
 		this._updateState();
 		this._items.skin.value = this.runtime.skin;
-		this._items.speed.value = Number(util.getProperty(this.runtime, util.TRANSITION));
+		let transition = Number(util.getProperty(this.runtime, util.TRANSITION));
+		this._items.speed.value = transitionToSpeed(transition);
 	}
 
 	runtimeAttributeChangedCallback(name) {
@@ -62,9 +63,13 @@ class Controls extends util.RuntimeAssociated {
 
 		node = document.createElement("input");
 		node.type = "range";
-		node.min = "0"; // FIXME
-		node.max = "5000";
-		node.addEventListener("input", e => this.runtime.style.setProperty(util.TRANSITION, e.target.value));
+		node.min = "0";
+		node.max = "3";
+		node.value = "1";
+		node.addEventListener("input", e => {
+			let transition = speedToTransition(e.target.valueAsNumber);
+			this.runtime.style.setProperty(util.TRANSITION, transition);
+		});
 		nodes.speed = node;
 
 		node = document.createElement("button");
@@ -97,3 +102,14 @@ class Controls extends util.RuntimeAssociated {
 util.reflectAttribute(Controls, "what");
 
 customElements.define("tm-controls", Controls);
+
+function speedToTransition(speed) {
+	speed = 3-speed;
+	return (speed ? 5 * Math.pow(10, speed) : 0);
+}
+
+function transitionToSpeed(transition) {
+	const base = Math.log(20);
+	let speed = (transition ? Math.round(Math.log10(transition/5)) : 0);
+	return 3-speed;
+}

@@ -5,6 +5,8 @@ class Rules extends util.RuntimeAssociated {
 		super();
 		this._built = false;
 		this._editing = false;
+		this._tds = [];
+		this._current = null;
 	}
 
 	static get observedAttributes() { return ["states", "symbols"]; }
@@ -46,6 +48,7 @@ class Rules extends util.RuntimeAssociated {
 		const table = this.querySelector("table");
 		const tHead = table.tHead;
 		const tBody = table.tBodies[0];
+		this._tds = [];
 
 		tHead.innerHTML = "";
 		tBody.innerHTML = "";
@@ -68,10 +71,12 @@ class Rules extends util.RuntimeAssociated {
 		for (let j=0;j<this.symbols;j++) {
 			let row = tBody.insertRow();
 			let cell;
+			let tds = [];
 			for (let i=-1;i<this.states;i++) {
 				if (i > -1) {
 					cell = row.insertCell();
 					fillCellFromString(cell, "1RA");
+					tds.push(cell);
 				} else {
 					cell = row.appendChild(document.createElement("th"));
 					let symbol = document.createElement("tm-symbol");
@@ -79,6 +84,7 @@ class Rules extends util.RuntimeAssociated {
 					cell.append(symbol);
 				}
 			}
+			this._tds.push(tds);
 		}
 	}
 
@@ -109,11 +115,13 @@ class Rules extends util.RuntimeAssociated {
 	_getCell(state, symbol) {
 		let rowIndex = symbolToIndex(symbol);
 		let colIndex = stateToIndex(state);
-		return this.querySelector("table").tBodies[0].rows[rowIndex].cells[colIndex+1];
+		return this._tds[rowIndex][colIndex];
 	}
 
 	_markCurrent(cell) {
-		[...this.querySelectorAll("td")].forEach(c => c.classList.toggle("current", c == cell));
+		this._current && this._current.classList.remove("current");
+		this._current = cell;
+		this._current && this._current.classList.add("current");
 	}
 
 	_toggleEditing() {

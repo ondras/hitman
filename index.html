@@ -6,8 +6,8 @@
 	</head>
 
 	<body>
-		<tm-runtime skin="fire">
-			<tm-rules states="5" editable></tm-rules>
+		<tm-runtime skin="robot">
+			<tm-rules states="3" editable></tm-rules>
 			<tm-machine state="A" position="0"></tm-machine>
 			<tm-tape></tm-tape>
 			<tm-controls what="reset step playpause"></tm-controls>
@@ -43,8 +43,14 @@
 
 			document.querySelector("tm-rules").fillBusyBeaver();
 
+			let ts = 0, steps = 0;
 			document.querySelector("tm-runtime").addEventListener("stats", e => {
-				document.querySelector("#stats").textContent = `Steps: ${e.detail.steps}, score: ${e.detail.score}`;
+				let now = performance.now();
+				let dt = (now-ts)/1000;
+				let ips = (e.detail.steps - steps)/dt;
+				steps = e.detail.steps;
+				ts = now;
+				document.querySelector("#stats").textContent = `Steps: ${e.detail.steps}, score: ${e.detail.score}, ips: ${ips}`;
 			});
 		</script>
 	</body>

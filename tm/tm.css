@@ -49,7 +49,7 @@ tm-symbol {
 }
 tm-runtime {
   --symbol-width: 30px;
-  --transition: 1000;
+  --transition: 500;
   --duration: calc(var(--transition) * 1ms / 3);
 }
 tm-runtime *,
@@ -95,19 +95,6 @@ tm-runtime[skin=robot] tm-symbol[value="0"] {
   filter: grayscale(1);
 }
 tm-runtime[skin=robot] tm-tape {
-  height: 1.5em;
-}
-tm-runtime[skin=fire] {
-  --symbol-width: 1.2em;
-}
-tm-runtime[skin=fire] tm-machine,
-tm-runtime[skin=fire] tm-state {
-  filter: drop-shadow(0 0 3px var(--color));
-}
-tm-runtime[skin=fire] tm-symbol[value="1"] {
-  filter: hue-rotate(180deg);
-}
-tm-runtime[skin=fire] tm-tape {
   height: 1.5em;
 }
 tm-runtime[skin=circle] tm-machine,

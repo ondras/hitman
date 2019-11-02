@@ -1,6 +1,6 @@
 tm-runtime {
 	--symbol-width: 30px;
-	--transition: 1000;
+	--transition: 500;
 	--duration: calc(var(--transition) * 1ms / 3);
 
 	*, *::before, *::after { box-sizing: border-box; }
@@ -42,22 +42,6 @@ tm-runtime {
 		tm-symbol {
 			transition: filter var(--duration);
 			&[value="0"] { filter: grayscale(1); }
-		}
-
-		tm-tape {
-			height: 1.5em;
-		}
-	}
-
-	&[skin=fire] {
-		--symbol-width: 1.2em;
-
-		tm-machine, tm-state {
-			filter: drop-shadow(0 0 3px var(--color));
-		}
-
-		tm-symbol {
-			&[value="1"] { filter: hue-rotate(180deg); }
 		}
 
 		tm-tape {

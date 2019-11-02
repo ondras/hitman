@@ -1,13 +1,11 @@
 export const TRANSITION = "--transition";
 
 const STATES = {
-	"robot": "🤖",
-	"fire": "🚒"
+	"robot": "🤖"
 }
 
 const SYMBOLS = {
-	"robot": "💡",
-	"fire": "🔥"
+	"robot": "💡"
 }
 
 export function getProperty(node, prop) {
