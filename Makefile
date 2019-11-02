@@ -2,7 +2,7 @@
 BIN := node_modules/less/bin
 LESSC := $(BIN)/lessc
 
-all: tm/tm.css
+all: hitman.css
 
-tm/tm.css: tm/*.less tm/elements/*.less
-	$(LESSC) tm/tm.less > $@
+hitman.css: hitman.less elements/*.less
+	$(LESSC) $< > $@
