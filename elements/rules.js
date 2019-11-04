@@ -146,14 +146,18 @@ function stateToIndex(state) { return state.charCodeAt(0) - "A".charCodeAt(0); }
 function symbolToIndex(symbol) { return Number(symbol); }
 
 function extractInstruction(cell) {
-	return {
-		symbol: cell.querySelector("tm-symbol"),
-		direction: cell.querySelector("tm-direction"),
-		state: cell.querySelector("tm-state")
+	if (!cell.instruction) {
+		cell.instruction = {
+			symbol: cell.querySelector("tm-symbol"),
+			direction: cell.querySelector("tm-direction"),
+			state: cell.querySelector("tm-state")
+		}
 	}
+	return cell.instruction;
 }
 
 function fillCellFromString(cell, string) {
+	cell.instruction = null;
 	cell.innerHTML = "";
 
 	let symbol = document.createElement("tm-symbol");
