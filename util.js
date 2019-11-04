@@ -1,7 +1,7 @@
 export const TRANSITION = "--transition";
 
 const STATES = {
-	"robot": "🤖"
+	"robot": "🤖",
 }
 
 const SYMBOLS = {

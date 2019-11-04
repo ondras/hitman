@@ -39,6 +39,9 @@ tm-tape {
   position: relative;
   width: var(--symbol-width);
 }
+tm-tape::before {
+  content: "\00a0";
+}
 tm-tape tm-symbol {
   position: absolute;
   left: calc(var(--position) * var(--symbol-width));
@@ -60,16 +63,12 @@ tm-runtime *::after {
 tm-runtime[skin=plain] {
   --symbol-width: calc(1ch + 2px);
   font-family: monospace;
-  line-height: 1.25;
 }
 tm-runtime[skin=plain] tm-machine {
   white-space: pre;
 }
 tm-runtime[skin=plain] tm-machine::after {
   content: "\A↓";
-}
-tm-runtime[skin=plain] tm-tape {
-  height: calc(1.25 * 1em);
 }
 tm-runtime[skin=robot] {
   --symbol-width: 1.2em;
@@ -94,16 +93,21 @@ tm-runtime[skin=robot] tm-symbol {
 tm-runtime[skin=robot] tm-symbol[value="0"] {
   filter: grayscale(1);
 }
-tm-runtime[skin=robot] tm-tape {
-  height: 1.5em;
+tm-runtime[skin=circle] {
+  --symbol-width: 1em;
 }
 tm-runtime[skin=circle] tm-machine,
 tm-runtime[skin=circle] tm-state {
+  display: inline-block;
+  color: transparent;
   width: var(--symbol-width);
   height: var(--symbol-width);
   border-radius: 50%;
   border: 3px solid black;
   background-color: var(--color);
+}
+tm-runtime[skin=circle] tm-rules td * {
+  vertical-align: middle;
 }
 tm-controls {
   display: flex;

@@ -2,6 +2,8 @@ tm-tape {
 	position: relative;
 	width: var(--symbol-width);
 
+	&::before { content: "\00a0"; }
+
 	tm-symbol {
 		position: absolute;
 		left: calc(var(--position) * var(--symbol-width));

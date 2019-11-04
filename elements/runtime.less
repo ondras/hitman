@@ -7,18 +7,11 @@ tm-runtime {
 
 	&[skin=plain] {
 		--symbol-width: calc(1ch + 2px);
-		@line-height: 1.25;
-
 		font-family: monospace;
-		line-height: @line-height;
 
 		tm-machine {
 			white-space: pre;
 			&::after { content: "\A↓"; }
-		}
-
-		tm-tape {
-			height: calc(@line-height * 1em);
 		}
 	}
 
@@ -43,19 +36,21 @@ tm-runtime {
 			transition: filter var(--duration);
 			&[value="0"] { filter: grayscale(1); }
 		}
-
-		tm-tape {
-			height: 1.5em;
-		}
 	}
 
 	&[skin=circle] {
+		--symbol-width: 1em;
+
 		tm-machine, tm-state {
+			display: inline-block;
+			color: transparent;
 			width: var(--symbol-width);
 			height: var(--symbol-width);
 			border-radius: 50%;
 			border: 3px solid black;
 			background-color: var(--color);
 		}
+
+		tm-rules td * { vertical-align: middle; }
 	}
 }
