@@ -3,6 +3,15 @@ import * as util from "../util.js";
 class Machine extends util.RuntimeAssociated {
 	static get observedAttributes() { return ["position", "state"]; }
 
+	connectedCallback() {
+		super.connectedCallback();
+
+		this._initial = {
+			state: this.state,
+			position: this.position
+		}
+	}
+
 	attributeChangedCallback(name, oldValue, newValue) {
 		switch (name) {
 			case "state": this._updateContent(); break;
@@ -11,8 +20,8 @@ class Machine extends util.RuntimeAssociated {
 	}
 
 	reset() {
-		this.position = 0;
-		this.state = "A";
+		this.position = this._initial.position;
+		this.state = this._initial.state;
 	}
 
 	runtimeConnectedCallback() { this._updateContent(); }

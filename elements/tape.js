@@ -1,6 +1,12 @@
 class Tape extends HTMLElement {
+	connectedCallback() {
+		this._initial = this.getAttribute("initial") || "";
+		this.reset();
+	}
+
 	reset() {
 		this.innerHTML = "";
+		this._initial.split("").forEach((value, index) => this.setValue(index, value));
 	}
 
 	getValue(position) {

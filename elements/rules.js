@@ -1,5 +1,45 @@
 import * as util from "../util.js";
 
+const BUSY = {
+	"2": {
+		"A0": "1RB",
+		"B0": "1LA",
+		"A1": "1LB",
+		"B1": "1RH"
+	},
+
+	"3": {
+		"A0": "1RB",
+		"B0": "0RC",
+		"C0": "1LC",
+		"A1": "1RH",
+		"B1": "1RB",
+		"C1": "1LA"
+	},
+	"4": {
+		"A0": "1RB",
+		"B0": "1LA",
+		"C0": "1RH",
+		"D0": "1RD",
+		"A1": "1LB",
+		"B1": "0LC",
+		"C1": "1LD",
+		"D1": "0RA"
+	},
+	"5": {
+		"A0": "1RB",
+		"B0": "1RC",
+		"C0": "1RD",
+		"D0": "1LA",
+		"E0": "1RH",
+		"A1": "1LC",
+		"B1": "1RB",
+		"C1": "0LE",
+		"D1": "1LD",
+		"E1": "0LA"
+	}
+}
+
 class Rules extends util.RuntimeAssociated {
 	constructor() {
 		super();
@@ -23,8 +63,11 @@ class Rules extends util.RuntimeAssociated {
 		table.createTBody();
 		this.append(table);
 
+		this._initial = this.getAttribute("initial");
 		this._built = true;
 		this._fill();
+
+		this.reset();
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -39,6 +82,18 @@ class Rules extends util.RuntimeAssociated {
 
 	reset() {
 		this._markCurrent(null);
+
+		let initial = this._initial;
+		if (!initial) { return; }
+
+		if (initial == "bb") { return this.fillBusyBeaver(); }
+
+		initial.split(",").forEach(rule => {
+			let [key, value] = rule.split(":");
+			let [state, symbol] = key.split("");
+			let cell = this._getCell(state, symbol);
+			fillCellFromString(cell, value)
+		});
 	}
 
 	get editable() { return this.hasAttribute("editable"); }
@@ -75,7 +130,7 @@ class Rules extends util.RuntimeAssociated {
 			for (let i=-1;i<this.states;i++) {
 				if (i > -1) {
 					cell = row.insertCell();
-					fillCellFromString(cell, "1RA");
+					fillCellFromString(cell, "0RA");
 					tds.push(cell);
 				} else {
 					cell = row.appendChild(document.createElement("th"));
@@ -207,43 +262,3 @@ function getSelectValues(cell) {
 util.reflectAttribute(Rules, "states", 1);
 util.reflectAttribute(Rules, "symbols", 2);
 customElements.define("tm-rules", Rules);
-
-const BUSY = {
-	"2": {
-		"A0": "1RB",
-		"B0": "1LA",
-		"A1": "1LB",
-		"B1": "1RH"
-	},
-
-	"3": {
-		"A0": "1RB",
-		"B0": "0RC",
-		"C0": "1LC",
-		"A1": "1RH",
-		"B1": "1RB",
-		"C1": "1LA"
-	},
-	"4": {
-		"A0": "1RB",
-		"B0": "1LA",
-		"C0": "1RH",
-		"D0": "1RD",
-		"A1": "1LB",
-		"B1": "0LC",
-		"C1": "1LD",
-		"D1": "0RA"
-	},
-	"5": {
-		"A0": "1RB",
-		"B0": "1RC",
-		"C0": "1RD",
-		"D0": "1LA",
-		"E0": "1RH",
-		"A1": "1LC",
-		"B1": "1RB",
-		"C1": "0LE",
-		"D1": "1LD",
-		"E1": "0LA"
-	}
-}
