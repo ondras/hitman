@@ -29,7 +29,7 @@ class Runtime extends HTMLElement {
 	reset() {
 		this._steps = 0;
 
-		// FIXME
+		// FIXME co kdyz nejsou?
 		this.tape.reset();
 		this.machine.reset();
 		this.rules.reset();
@@ -38,12 +38,12 @@ class Runtime extends HTMLElement {
 	}
 
 	async step() {
-		// FIXME
+		// FIXME co kdyz nejsou?
 		this._runBatch(this.machine, this.tape, this.rules, 1);
 		this._dispatchStats();
 	}
 
-	async _runBatch(machine, tape, rules, count) {
+	_runBatch(machine, tape, rules, count) {
 		if (machine.state == "H") { return false; }
 
 		for (let i=0;i<count;i++) {
@@ -57,11 +57,12 @@ class Runtime extends HTMLElement {
 
 	async _loop() {
 		let {machine, tape, rules} = this;
-		let time = Number(util.getProperty(machine, util.TRANSITION));
-		let count = (time ? 1 : 1000);
+		let count, time;
 
 		while (this.running) {
-			this.running = await this._runBatch(machine, tape, rules, count);
+			time = Number(util.getProperty(machine, util.TRANSITION));
+			count = (time ? 1 : 1000);
+			this.running = this._runBatch(machine, tape, rules, count);
 			this._dispatchStats();
 			this.running && await sleep(time);
 		}
