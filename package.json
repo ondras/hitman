@@ -1,6 +1,6 @@
 {
   "name": "@ondras/hitman",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "less": "^3.10.3"
   },
