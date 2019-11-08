@@ -7,14 +7,9 @@
 
 	<body>
 		<tm-runtime skin="robot">
-			<tm-rules states="3" editable initial="bb"></tm-rules>
+			<tm-rules states="4" editable initial="bb"></tm-rules>
 			<tm-machine state="A" position="0"></tm-machine>
 			<tm-tape></tm-tape>
-<!--
-			<tm-rules states="2" symbols="3" initial="A0:0RA,A1:1RA,A2:2LB,B0:1LH,B1:0LB,B2:1LH"></tm-rules>
-			<tm-machine state="A" position="1"></tm-machine>
-			<tm-tape initial="210112"></tm-tape>
--->
 
 			<tm-controls what="reset step playpause"></tm-controls>
 			<tm-controls what="skin"></tm-controls>
@@ -50,8 +45,6 @@
 
 		<script type="module">
 			import "../hitman.js";
-
-//			document.querySelector("tm-rules").fillBusyBeaver();
 
 			let ts = 0, steps = 0;
 			document.querySelector("tm-runtime").addEventListener("stats", e => {
