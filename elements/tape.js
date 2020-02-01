@@ -1,12 +1,14 @@
 class Tape extends HTMLElement {
 	connectedCallback() {
 		this._initial = this.getAttribute("initial") || "";
+		this._initialOffset = Number(this.getAttribute("initial-offset")) || 0;
 		this.reset();
 	}
 
 	reset() {
+		const offset = this._initialOffset;
 		this.innerHTML = "";
-		this._initial.split("").forEach((value, index) => this.setValue(index, value));
+		this._initial.split("").forEach((value, index) => this.setValue(index+offset, value));
 	}
 
 	getValue(position) {
